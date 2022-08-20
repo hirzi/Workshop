@@ -1,10 +1,8 @@
 # Workshop 4 - Population structure & demography (low-coverage whole genome sequencing data)
 
-# Why go low?
+## Why go low?
 
-## Experimental design.
-
-All scientific lines of inquiry start with a question. From this question, the researcher comes up with an experimental design that can best address said question. If money and time were no object, the researcher would e.g. plan for an experiment with 10 treatments, 10 replicates per treatment, and 1000 samples per replicate. However, in the real world, the experimental design is not determined purely by how best to address the biological question at hand, but also by cost, time and technical feasibility.
+**Experimental design** All scientific lines of inquiry start with a question. From this question, the researcher comes up with an experimental design that can best address said question. If money and time were no object, the researcher would e.g. plan for an experiment with 10 treatments, 10 replicates per treatment, and 1000 samples per replicate. However, in the real world, the experimental design is not determined purely by how best to address the biological question at hand, but also by cost, time and technical feasibility.
 
 <br>
 
