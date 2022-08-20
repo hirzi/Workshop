@@ -1,19 +1,20 @@
 # Workshop 4 - Population structure & demography (low-coverage whole genome sequencing data)
 
-<br> <br>
-
-Why go low?
-
+# Why go low?
 
 ## Experimental design.
 
 All scientific lines of inquiry start with a question. From this question, the researcher comes up with an experimental design that can best address said question. If money and time were no object, the researcher would e.g. plan for an experiment with 10 treatments, 10 replicates per treatment, and 1000 samples per replicate. However, in the real world, the experimental design is not determined purely by how best to address the biological question at hand, but also by cost, time and technical feasibility.
+
+<br>
 
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Experimental_design.png" width="800"> 
 
 Generally, one is faced with the following trade-off; of having either 1) more samples at the expense of data per sample or 2) less samples but with more data per sample.
 
 With respect to  genetics and sequencing, if we start with the perfect or complete representation of a unit data as the whole genome sequenced at high coverage (e.g. 50x), less data can imply 1 of two things: 1) sequencing a reduced or sub- representation of the genome, i.e. using genetic markers like microsats and SNPs or 2) sequencing the whole genome but at low coverage. I.e. a trade-off of breadth vs depth. To give a concrete example, imagine you had enough money to sequence 1 million reads, and that this is sufficient to sequence your whole genome at 2x or 10% of your genome at 20X, which would you choose? 
+
+<br> 
 
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/breadth_vs_depth.png" width="800"> 
 
