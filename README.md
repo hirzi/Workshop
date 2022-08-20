@@ -1,18 +1,21 @@
-# Workshop 4 - Population structure and demography of low-coverage whole genome sequencing data
+# Workshop 4 - Population structure & demography (low-coverage whole genome sequencing data)
+
+<br> <br>
 
 Why go low?
 
 
-Experimental design.
+## Experimental design.
+
 All scientific lines of inquiry start with a question. From this question, the researcher comes up with an experimental design that can best address said question. If money and time were no object, the researcher would e.g. plan for an experiment with 10 treatments, 10 replicates per treatment, and 1000 samples per replicate. However, in the real world, the experimental design is not determined purely by how best to address the biological question at hand, but also by cost, time and technical feasibility.
 
-Pic
+<img src="https://github.com/hirzi/Workshop/blob/master/Example_figures/Experimental_design.png" width="800"> 
 
 Generally, one is faced with the following trade-off; of having either 1) more samples at the expense of data per sample or 2) less samples but with more data per sample.
 
 With respect to  genetics and sequencing, if we start with the perfect or complete representation of a unit data as the whole genome sequenced at high coverage (e.g. 50x), less data can imply 1 of two things: 1) sequencing a reduced or sub- representation of the genome, i.e. using genetic markers like microsats and SNPs or 2) sequencing the whole genome but at low coverage. I.e. a trade-off of breadth vs depth. To give a concrete example, imagine you had enough money to sequence 1 million reads, and that this is sufficient to sequence your whole genome at 2x or 10% of your genome at 20X, which would you choose? 
 
-Pic
+<img src="https://github.com/hirzi/Workshop/blob/master/Example_figures/breadth_vs_depth.png" width="800">  
 
 The answer can be difficult, and lies in weighing the respective advantages and disadvantages of these 2 alternatives, in the context of the biological question at hand.
 Briefly, both approaches have their caveats. For the former (i.e. genetic markers), you make the assumption that your sub-selection of the genome is representative of the whole genome, you are prone to ascertainment bias, and you lack data in unsequenced parts of the genome, hence making it inappropriate for e.g. when looking for new genetic variants. For the latter (low-coverage), you’re certainty in the genotype call (whether something is A,C,T,G) is much lower, due to the fact that you’re reading each position fewer times, and hence you’re prone to more sequencing errors in your genotype calls.
@@ -24,8 +27,6 @@ Low-coverage methods also lend themselves well to the sequencing and analysis of
 To be concise, it is the statistic propagation of uncertainty from raw sequenving data to downstream analysis (via working with genotyp likelihoods rather than discrete (lossy) genotype calls) that make low-coverage methods useful. The effect may be huge at low coverage or minimal/negligable at high coverage (where results will tend to converge to classical genotype-call based methods). By working directly with genotype likelihoods, less lossy) steps (e.g. genotype calling, various filtering) need to be performed, leading to less loss of potentially informative data.
 
 # Workshop 4 (morning session) goals.
-
-<br> <br>
 
 In this session you will learn how to use low-coverage whole genome data
 to do:
@@ -40,19 +41,10 @@ Population genetic analyses of NGS data is typically run on large linux-based co
 ## What is Docker?
 Docker is an open source container based technology that runs in an isolated, self-contained package that can be efficiently distributed and executed in a portable manner across a wide range of computing platforms. Containerization in concept is very similar to virtualization, i.e. a method of isolating an application from the underlying machine operating system. The difference between virtual machines and containers is that containers do not require a full operating system to operate but rather the application and dependencies, means they are much smaller in size (Gharib 2018). 
 
-## 1. Make sure you have Docker Desktop installed on your computer (choose installation depending on your computer's OS).
-https://www.docker.com/get-started/
-https://docs.docker.com/desktop/install/windows-install/
-https://docs.docker.com/desktop/install/mac-install/
-https://docs.docker.com/desktop/linux/
+## 1. Make sure you have Docker Desktop installed on your computer
+Instructions for intalling Docker can be found [here](https://www.docker.com/get-started/), with links (including minimum system requirements) for [Windows](https://docs.docker.com/desktop/install/windows-install/), [Mac](https://docs.docker.com/desktop/install/mac-install/) and [Linux](https://docs.docker.com/desktop/linux/).
 
-Note that Docker has the following minimum system requirements:
-Windows 10 64-bit: Home or Pro 21H1 (build 19043) or higher, or Enterprise or Education 20H2 (build 19042) or higher.
-macOS must be version 10.15 or newer. That is, Catalina, Big Sur, or Monterey.
-64-bit processor
-4GB system RAM
-
-## 2. Make sure you are familiar with the basics of bash shell scripting.
+## 2. Make sure you are familiar with the basics of bash shell scripting
 We will be working almost exclusively through the command line in docker, so if you have not used shell scripting before or are getting rusty on it, it may be helpful to have a look at a tutorial like [this one](https://linuxconfig.org/bash-scripting-tutorial-for-beginners) or a cheat sheet like [this one](https://bioinformaticsworkbook.org/Appendix/Unix/UnixCheatSheet.html#gsc.tab=0) before proceeding to the next step.
 
 # Workshop data
@@ -64,7 +56,7 @@ The populations and data that we will use in this workshop represents a small su
 
 # Programs
 For this practical, we will be using:
-[SAMtools] (https://www.htslib.org/),
+[SAMtools](https://www.htslib.org/),
 [ANGSD](http://popgen.dk/wiki/index.php/ANGSD) (Analysis of Next
 Generation Sequencing Data),
 [ngsAdmix](http://www.popgen.dk/software/index.php/NgsAdmix) and
@@ -89,7 +81,7 @@ To run Ubuntu, we use "docker run"
 
 The -it instructs Docker to allocate a pseudo-TTY connected to the container’s stdin; creating an interactive bash shell in the container. I.e. this allows us to run Ubuntu interactively in Docker. --rm automatically remove the container when it exits. To exit the bash interactive shell, enter: exit 13.
 
-## Step 3. Pull Docker images
+## Step 3. Pulling Docker images
 
 Let's now "pull" Docker images for the other programs we will be using.
 
@@ -121,7 +113,7 @@ Let's rename this reference sequence file.
 	
 	mv 'assembly_homozygous.fa?dl=1' assembly_homozygous.fa
 
-## Step 6. Getting a hand of the command-line in Docker
+## Step 6. Getting a hand with command-line in Docker
 
 Now that we have all the data downloaded, let's try a few bash commands to see what we have.
 
@@ -134,7 +126,7 @@ How many BAM files (i.e. samples) are there? (hint: ls \*bam | wc -l). In total 
 Now, let's check directory permissions. Do we have permission to write to the /data/Workshop/Data/ directory? You can check this with the command "ls -l". If not, let's change permissions so that you can write to this directory.
 chmod 777 /data/Workshop/Data
 
-# Step 7. Index files
+## Step 7. Index files
 We now have the data stored in a named volume. Even when we close the Docker container, the volume is maintained. We can always re-access the volume by mounting it it when running a new container. Before we perform any analysis with BAM and fasta files (or really any large sequencing file), we need to index them so that programs can parse through them efficiently. To do this, let's open another terminal tab, in which we will run Samtools. Note the named volume that we mount to.
 
 	docker run --name samtools --mount source=myvol,target=/data -w /data/ -it --rm biocontainers/samtools:v1.9-4-deb_cv1
@@ -153,7 +145,7 @@ Index all the BAM files (here we'll do this in a for loop):
 
 
 
-# Principle component analysis
+# Principle component analysis (PCA)
 
 What is principle component analysis (PCA)? PCA is a method that reduces the dimensionality of a dataset to emphasize variation and bring out strong (and more easily) interpretable) patterns in a dataset. It does this by transforming a large set of (potentially correlated) variables into a smaller set of uncorrelated variables while minimising information loss.
 
