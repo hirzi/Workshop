@@ -9,7 +9,8 @@ Why go low?
 
 All scientific lines of inquiry start with a question. From this question, the researcher comes up with an experimental design that can best address said question. If money and time were no object, the researcher would e.g. plan for an experiment with 10 treatments, 10 replicates per treatment, and 1000 samples per replicate. However, in the real world, the experimental design is not determined purely by how best to address the biological question at hand, but also by cost, time and technical feasibility.
 
-<img src="https://github.com/hirzi/Workshop/tree/main/Example_figures/Experimental_design.png" width="800"> 
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/breadth_vs_depth.png" width="800"> 
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Untitled-3.png" width="800"> 
 
 Generally, one is faced with the following trade-off; of having either 1) more samples at the expense of data per sample or 2) less samples but with more data per sample.
 
