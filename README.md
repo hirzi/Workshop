@@ -8,7 +8,7 @@
 
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Experimental_design.png" width="800"> 
 
-Generally, one is faced with the following trade-off; of having either 1) more samples at the expense of data per sample or 2) less samples but with more data per sample.
+Generally, one is faced with the following trade-off; of having either **1)** more samples at the expense of data per sample or **2)** less samples but with more data per sample.
 
 With respect to  genetics and sequencing, if we start with the perfect or complete representation of a unit data as the whole genome sequenced at high coverage (e.g. 50x), less data can imply 1 of two things: 1) sequencing a reduced or sub- representation of the genome, i.e. using genetic markers like microsats and SNPs or 2) sequencing the whole genome but at low coverage. I.e. a trade-off of breadth vs depth. To give a concrete example, imagine you had enough money to sequence 1 million reads, and that this is sufficient to sequence your whole genome at 2x or 10% of your genome at 20X, which would you choose? 
 
@@ -152,6 +152,11 @@ We can visualise how a PCA works through this helpful, interactive link:
 
 https://setosa.io/ev/principal-component-analysis/ - link or embed!
 
+<iframe
+  src="https://setosa.io/ev/principal-component-analysis"
+  style="width:100%; height:300px;"
+></iframe>
+
 
 For NGS data, each variant site (e.g. single nucleotide polymorphism (SNP)) represents one dimesion (axis) of variation. So if we have 1 million SNPs, we have 1 million dimensions (axes) of variation. Obviously, this would be extremely difficult to visualise without some sort of transformation (we can normally only visualise 2-3 axes at once). Additionally, many SNPs will be highly correlated (linked), e.g. think height and weight, implying the a dimension-reduction method like PCA can be highly effective at reducing the dimensionality of the dataset while retaining most of the variance.
 
@@ -163,7 +168,7 @@ Add pic from PCAngsd
 
 To perform PCA on lowcov data,  we have to infer the genetic covariance matrix, which can be estimated in different ways. Here we'll use PCANGSD. See lcs and pcangsd tutorials.
 
-## Step 1: PCAngsd takes as input genotype likelihoods in beagle format, which we generated in the step before using the `-doGLF 2`option.
+## Step 1. PCAngsd takes as input genotype likelihoods in beagle format, which we generated in the step before using the `-doGLF 2`option.
 
 	REF=/data/Workshop/Data/assembly_homozygous.fa
 
@@ -173,7 +178,7 @@ Here, we have assigned the reference sequence fasta file to a variable, so that 
 	angsd -GL 2 -out GL_75inds -ref ${REF} -nThreads 4 -doGlf 2 -doMajorMinor 1 -SNP_pval 1e-6 -doMaf 1 -only_proper_pairs 1 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -bam samples_5inds.list -rf scaffolds.list
 
 
-# Step 2: Run PCA via pcangsd. We can first look at PCAngsd's options via:
+# Step 2. Run PCA via pcangsd. We can first look at PCAngsd's options via:
 	
 	pcangsd.py -h
 
@@ -186,6 +191,9 @@ And then perform the PCA (adjusting the number of threads accordingly)
 
 # We can then plot the resutls (PC1 vs PC2) in R as follows (don't forget to upload pop metadata files for PCA, admixture, FST to your github!);
 	R code
+
+
+# Let's add the plotly PCA results.
 
 # How do we interpet the results (add html results to Github tutorial!). We find three distinct clusters. Let's add map to githubs totorial. How much variance is explained by the first two PCs? Provide links/references on how to interpret/not interpret PCA results
 
