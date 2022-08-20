@@ -9,14 +9,13 @@ Why go low?
 
 All scientific lines of inquiry start with a question. From this question, the researcher comes up with an experimental design that can best address said question. If money and time were no object, the researcher would e.g. plan for an experiment with 10 treatments, 10 replicates per treatment, and 1000 samples per replicate. However, in the real world, the experimental design is not determined purely by how best to address the biological question at hand, but also by cost, time and technical feasibility.
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/breadth_vs_depth.png" width="800"> 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Untitled-3.png" width="800"> 
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Experimental_design.png" width="800"> 
 
 Generally, one is faced with the following trade-off; of having either 1) more samples at the expense of data per sample or 2) less samples but with more data per sample.
 
 With respect to  genetics and sequencing, if we start with the perfect or complete representation of a unit data as the whole genome sequenced at high coverage (e.g. 50x), less data can imply 1 of two things: 1) sequencing a reduced or sub- representation of the genome, i.e. using genetic markers like microsats and SNPs or 2) sequencing the whole genome but at low coverage. I.e. a trade-off of breadth vs depth. To give a concrete example, imagine you had enough money to sequence 1 million reads, and that this is sufficient to sequence your whole genome at 2x or 10% of your genome at 20X, which would you choose? 
 
-<img src="https://github.com/hirzi/Workshop/tree/main/Example_figures/breadth_vs_depth.png" width="800">  
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/breadth_vs_depth.png" width="800"> 
 
 The answer can be difficult, and lies in weighing the respective advantages and disadvantages of these 2 alternatives, in the context of the biological question at hand.
 Briefly, both approaches have their caveats. For the former (i.e. genetic markers), you make the assumption that your sub-selection of the genome is representative of the whole genome, you are prone to ascertainment bias, and you lack data in unsequenced parts of the genome, hence making it inappropriate for e.g. when looking for new genetic variants. For the latter (low-coverage), you’re certainty in the genotype call (whether something is A,C,T,G) is much lower, due to the fact that you’re reading each position fewer times, and hence you’re prone to more sequencing errors in your genotype calls.
