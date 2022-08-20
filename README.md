@@ -71,13 +71,13 @@ Generation Sequencing Data),
 [PCAngsd](http://www.popgen.dk/software/index.php/PCAngsd).
 We will run the programs in a Docker container so there is no need to install these programs locally on your computer.
 
-# Instructions - preparing our Docker container
+# Instructions - preparing our Docker containers
 
-## 2. Clone this GitHub repository to your Linux server
+## Step 1. Open Docker
+First, open Docker Desktop on your computer. Then, open Windows Terminal (Powershell), Mac Terminal or Linux terminal. If Docker has ben succesfully installed, you should see the Docker help menu after typing "docker" in the terminal. Docker itself has a whole syntax for usage ([Docker manual](https://docs.docker.com/engine/reference/commandline/docker/), but today we will focus more on the bash-based command-lines as that is what is mainly used to work with NGS data (again here Docker is only used as container to run NGS programs without installing them locally).
 
-## Step 1. To start, let's open Docker. Then, open Windows Terminal (Powershell), Mac Terminal or Linux terminal. If Docker has ben succesfully installed, you should see the Docker help menu after typing "docker" in the terminal. Docker itself has a whole syntax for usage ([Docker manual](https://docs.docker.com/engine/reference/commandline/docker/), but today we will focus more on the bash-based command-lines as that is what is mainly used to work with NGS data (again here Docker is only used as container to run NGS programs without installing them locally).
-
-## Step 2: We first need a Linux distribution (e.g. Ubuntu) running in our Docker container. Use "docker pull" to pull a Docker image or repository from a registry. 
+## Step 2. Running Ubuntu on Docker
+We first need a Linux distribution (e.g. Ubuntu) running in our Docker container. Use "docker pull" to pull a Docker image or repository from a registry. 
 
 	docker pull ubuntu
 
@@ -89,13 +89,16 @@ To run Ubuntu, we use "docker run"
 
 The -it instructs Docker to allocate a pseudo-TTY connected to the container’s stdin; creating an interactive bash shell in the container. I.e. this allows us to run Ubuntu interactively in Docker. --rm automatically remove the container when it exits. To exit the bash interactive shell, enter: exit 13.
 
-## Step 3: Let's now "pull" Docker images for the other programs we will be using.
+## Step 3. Pull Docker images
+
+Let's now "pull" Docker images for the other programs we will be using.
 
 	docker pull biocontainers/samtools:v1.9-4-deb_cv1
 	docker pull zjnolen/angsd
 	docker pull didillysquat/pcangsd
 
-## Step 4: We have now "pulled" the necessary programs into Docker. We now need the data. First we'll need to create a volume in Docker to store downloaded and generated data. Here, we will run an Ubuntu container with a named volume via the --mount argument (i.e. we will name this created volume "myvol" and define the associated container path as "/data". The -w allows the command to be executed inside the defined working directory. Before we download data, we will first need to install some other programs within the running container, namely git. 
+## Step 4. Creating and mounting a volume
+We have now "pulled" the necessary programs into Docker. We now need the data. First we'll need to create a volume in Docker to store downloaded and generated data. Here, we will run an Ubuntu container with a named volume via the --mount argument (i.e. we will name this created volume "myvol" and define the associated container path as "/data". The -w allows the command to be executed inside the defined working directory. Before we download data, we will first need to install some other programs within the running container, namely git. 
 
 	docker run --name base --mount source=myvol,target=/data -w /data -it --rm ubuntu
 	apt update
@@ -105,11 +108,12 @@ While we're at it, let's install a text editor too (vim nano).
 
 	apt-get install vim nano
 
-## Step 5: Then we download data. All the BAM files as well as population metadata are deposited in the github: https://github.com/hirzi/Workshop (make public!). Let's pull this directory to our Docker container and our named volume.
+## Step 5. Download data
+Then we download data. All the BAM files as well as population metadata are deposited in the github: https://github.com/hirzi/Workshop (make public!). Let's pull this directory to our Docker container and our named volume.
 
 	git clone https://github.com/hirzi/Workshop.git
 
-Once donwloaded, let's navigate to the /data directory containing the samples. Once there and before we continue, let's download the reference sequence. The reference is deposited in a separate repository (because it's large file).
+Once downloaded, let's navigate to the /data directory containing the samples. Once there and before we continue, let's download the reference sequence. The reference is deposited in a separate repository (because it's large file).
 
 	wget https://www.dropbox.com/s/1nggjjhrcjseuwx/assembly_homozygous.fa?dl=1
 
@@ -117,7 +121,9 @@ Let's rename this reference sequence file.
 	
 	mv 'assembly_homozygous.fa?dl=1' assembly_homozygous.fa
 
-## Step 6: Now that we have all the data downloaded, let's try a few bash commands to see what we have.
+## Step 6. Getting a hand of the command-line in Docker
+
+Now that we have all the data downloaded, let's try a few bash commands to see what we have.
 
 	cd /data/Workshop/Data/
 	ls
@@ -125,18 +131,17 @@ Let's rename this reference sequence file.
 
 How many BAM files (i.e. samples) are there? (hint: ls \*bam | wc -l). In total we have 95 samples (13 populatiosn with 5 individuals each and 2 populations with 15 individuals each).
 
-## Now, let's check directory permissions. Do we have permission to write to the /data/Workshop/Data/ directory? You can check this with the command "ls -l".
-# If not, let's change permissions so that you can write to this directory.
+Now, let's check directory permissions. Do we have permission to write to the /data/Workshop/Data/ directory? You can check this with the command "ls -l". If not, let's change permissions so that you can write to this directory.
 chmod 777 /data/Workshop/Data
 
-# Step 7: We now have the data stored in a named volume. Even when we close the Docker container, the volume is maintained. We can always re-access the volume by mounting it it when running a new container. Before we perform any analysis with BAM and fasta files (or really any large sequencing file), we need to index them so that programs can parse through them efficiently. To do this, let's open another terminal tab, in which we will run Samtools. Note the named volume that we mount to.
+# Step 7. Index files
+We now have the data stored in a named volume. Even when we close the Docker container, the volume is maintained. We can always re-access the volume by mounting it it when running a new container. Before we perform any analysis with BAM and fasta files (or really any large sequencing file), we need to index them so that programs can parse through them efficiently. To do this, let's open another terminal tab, in which we will run Samtools. Note the named volume that we mount to.
 
 	docker run --name samtools --mount source=myvol,target=/data -w /data/ -it --rm biocontainers/samtools:v1.9-4-deb_cv1
 	
 Index the fasta file (i.e. the reference sequence):
 
 	samtools faidx assembly_homozygous.fa
-
 
 Index all the BAM files (here we'll do this in a for loop):
 
