@@ -190,7 +190,9 @@ To perform PCA, we want to find a rotation and scaling of the data to find new s
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_pca.png" width="400"> 
 
 
-## Step 1. PCAngsd takes as input genotype likelihoods in beagle format, which we generated in the step before using the `-doGLF 2`option.
+## Step 1\. PCAngsd input
+
+PCAngsd takes as input genotype likelihoods in beagle format, which we generated in the step before using the `-doGLF 2`option.
 
 	REF=/data/Workshop/Data/assembly_homozygous.fa
 
@@ -200,7 +202,9 @@ Here, we have assigned the reference sequence fasta file to a variable, so that 
 	angsd -GL 2 -out GL_75inds -ref ${REF} -nThreads 4 -doGlf 2 -doMajorMinor 1 -SNP_pval 1e-6 -doMaf 1 -only_proper_pairs 1 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -bam samples_5inds.list -rf scaffolds.list
 
 
-## Step 2. Run PCA via pcangsd. We can first look at PCAngsd's options via:
+## Step 2\. Run PCA via PCAngsd. 
+
+We can first look at PCAngsd's options via:
 	
 	pcangsd.py -h
 
@@ -211,11 +215,11 @@ And then perform the PCA (adjusting the number of threads accordingly)
 	pcangsd.py -beagle ${prefix}.beagle.gz -threads 2 -o ${prefix}.pcangsd
 
 
-We can then plot the resutls (PC1 vs PC2) in R as follows (don't forget to upload pop metadata files for PCA, admixture, FST to your github!);
+We can then plot the results (PC1 vs PC2) in R as follows (don't forget to upload pop metadata files for PCA, admixture, FST to your github!);
 	R code
 
-
-Let's add the plotly PCA results.
+## Step 3\. Run PCA via PCAngsd. 
+Let's add the plotly PCA results (embed html).
 
 How do we interpet the results (add html results to Github tutorial!). We find three distinct clusters. Let's add map to githubs totorial. How much variance is explained by the first two PCs? Provide links/references on how to interpret/not interpret PCA results
 
