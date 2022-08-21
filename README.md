@@ -75,7 +75,7 @@ We will be working almost exclusively through the command-line in docker, so if 
 
 We will be working with low-coverage whole-genome sequencing (WGS) data (average 2x) of a plant species *Dianthus sylvetris* (Wood pink). This is a perennial plant species that grows throughout the mountain ranges of Europe (e.g. Alps, Apennines & Dinarides). Given the European mountain ranges experienced repeated bouts expansion and recession of glacial ice sheets during the last ca. 2 million years (the Quaternary glaciations or "ice ages"), this species likely experienced a complex and dynamic demographic history. Additionally, this species inhabits a large elevational range (0 - 2500 meters), with the consequence that contemporary populations exhibit a remarkable degree of local adaptation in phenotypic and life history traits. Thee genetic bases of these observed adaptations, however, remain unknown.
 
-The populations and data that we will use in this workshop represents a small subset from a larger study that covered the geograpihc and ecologcal range of the species (https://www.biorxiv.org/content/10.1101/2022.06.07.495159v1). Our data is in BAM format (i.e. mapped sequencing data) and span a ~2MB region from four scaffolds selected at random across the genome. (may want to extract an interesting region for FST/PBS analysis, 15 inds pops. alternatively, consider taking data directly from Simons's data and do FST scans. Oruse selscan on vcf). We will use this data to interogate this species' population structure via principle component analysis (PCA) and admixtre/ancestry analysis.
+The populations and data that we will use in this workshop represents a small subset from a larger study that covered the geographic and ecological range of the species (https://www.biorxiv.org/content/10.1101/2022.06.07.495159v1). Our data is in BAM format (i.e. mapped sequencing data) and span a ~2MB region from four scaffolds selected at random across the genome. (may want to extract an interesting region for FST/PBS analysis, 15 inds pops. alternatively, consider taking data directly from Simons's data and do FST scans. Oruse selscan on vcf). We will use this data to interogate this species' population structure via principle component analysis (PCA) and admixtre/ancestry analysis.
 <br>
 
 # Workshop - programs we will use
@@ -218,7 +218,7 @@ Then run the PCA (adjust the number of threads accordingly)
 We can then plot the results (PC1 vs PC2) in R as follows (don't forget to upload pop metadata files for PCA, admixture, FST to your github!);
 	R code
 
-## Step 3\. Copy file to/from the Docker container (volume) to local computer
+## Step 3\. Copy file to/from the Docker container (volume) to local computer. Alternatively, let's write R script and upload on Github repo. Then easy to run as Rscript, output as html. Then copy to local computer.
 
 Copy files to/from container (volume) to local filesystem (here we create a temporary container (named temp) with our named volume mounted)
 
@@ -229,8 +229,6 @@ Copy files to/from container (volume) to local filesystem (here we create a temp
 ## Step 4\. Plot PCA results - Let's add the plotly PCA results (embed html)!
 
 How do we interpet the results (add html results to Github tutorial!). We find three distinct clusters. Let's add map to githubs totorial. How much variance is explained by the first two PCs? Provide links/references on how to interpret/not interpret PCA results. While PCA plots can sometimes be relatively straightforward to interpret (as here), 
-
-[(Meisner & Albrechtsen 2018)](https://academic.oup.com/genetics/article/210/2/719/5931101)
 
 [(Gompert & Buerkle 2016)] (https://onlinelibrary.wiley.com/doi/full/10.1111/eva.12380)
 [(Novembre & Stephens 2008)] (https://www.nature.com/articles/ng.139)
@@ -259,6 +257,7 @@ Other than ngsAdmix, PCAngsd can automatically infer the most likely number of a
 Here, we have PCangsd output individual admixture proportions (-admix), and also output population specific allele frequencies (-admix_save). We iterate over K (here via the -e argument which defines the number of eigenvalues, rather than via -admix _K as the latter is not recommended).
 
 To estimate admixture proportions in PCangsd, you need to define an alpha parameter (sparseness regularisation parameter). This can be specified manually (-admix_alpha) or automatically searching for the optimal alpha (-admix_auto), specifiying only a soft upper bound.
+
 	for k in $(seq 1 2); do
 		pcangsd.py -beagle ${prefix}.beagle.gz -threads 2 -e ${k} -admix -admix_auto 10000 -o ${prefix}.admix.pcangsd.K$((${k}+1))
 	done
@@ -266,10 +265,12 @@ To estimate admixture proportions in PCangsd, you need to define an alpha parame
 Alternatively, we can use NGSAdmix (slower)
 Remember the LSB_JOBINDEX goes from 1,2,3,....
 To change, add constant to variable e.g. $((${i}+c))
+
 	for k in $(seq 1 2); do
 		NGSadmix -likes ${prefix}.beagle.gz -K $((${k}+1)) -P 2 -o ${prefix}_$((${k}+1))
 	done
 
+Either write R code, or upload R code on Github repo to allow easy execution of Rscript in Docker
 
 Copy files to/from container (volume) to local filesystem (here we create a temporary container (named temp) with our named volume mounted)
 
@@ -278,8 +279,6 @@ Copy files to/from container (volume) to local filesystem (here we create a temp
 	docker cp temp:/data/Workshop/Data/GL_95inds.pcangsd.cov ./Desktop/Test/
 	docker cp temp:/data/Workshop/Data/admix_results ./Desktop/Test/
 	#remove/detach docker contained after copying
-
-
 
 [(Puechmaille 2016)] (https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12512)
 [(Gilbert 2016)] (https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12521)
