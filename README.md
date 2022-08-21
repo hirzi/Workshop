@@ -194,34 +194,31 @@ To perform PCA, we want to find a rotation and scaling of the data to find new s
 
 ## Step 1\. PCAngsd input
 
-PCAngsd takes as input genotype likelihoods in beagle format, which we generated in the step before using the `-doGLF 2`option.
+Here, we first assign the reference sequence fasta file to a variable, so that it is easy to refer to in the next steps (we can expand a variable *i* via ${*i*).
 
 	REF=/data/Workshop/Data/assembly_homozygous.fa
 
-Here, we have assigned the reference sequence fasta file to a variable, so that it is easy to refer to in the next steps (we can expand a variable *i* via ${*i*).
+PCAngsd takes as input genotype likelihoods in beagle format, which we generated in the step before using the `-doGLF 2`option.
 
 	angsd -GL 2 -out GL_95inds -ref ${REF} -nThreads 4 -doGlf 2 -doMajorMinor 1 -SNP_pval 1e-6 -doMaf 1 -only_proper_pairs 1 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -bam samples.list -rf scaffolds.list
 	angsd -GL 2 -out GL_75inds -ref ${REF} -nThreads 4 -doGlf 2 -doMajorMinor 1 -SNP_pval 1e-6 -doMaf 1 -only_proper_pairs 1 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -bam samples_5inds.list -rf scaffolds.list
 
-
 ## Step 2\. Run PCA via PCAngsd. 
 
-We can first look at PCAngsd's options via:
+Let's first look at PCAngsd's options:
 	
 	pcangsd.py -h
 
-And then perform the PCA (adjusting the number of threads accordingly)
+Then run the PCA (adjust the number of threads accordingly)
 
 	prefix="GL_95inds"
 	prefix="GL_75inds"
 	pcangsd.py -beagle ${prefix}.beagle.gz -threads 2 -o ${prefix}.pcangsd
 
-
 We can then plot the results (PC1 vs PC2) in R as follows (don't forget to upload pop metadata files for PCA, admixture, FST to your github!);
 	R code
 
-## Step 3\. Run PCA via PCAngsd. 
-Let's add the plotly PCA results (embed html).
+## Step 3\. Plot PCA results - Let's add the plotly PCA results (embed html)!
 
 How do we interpet the results (add html results to Github tutorial!). We find three distinct clusters. Let's add map to githubs totorial. How much variance is explained by the first two PCs? Provide links/references on how to interpret/not interpret PCA results
 
@@ -338,4 +335,3 @@ Note that calling e.g. -n 4 and -P 16 allows better CPU usage as it allows for h
 
 # optional: dadi
 # optional: selscan (requires vcfs)
-
