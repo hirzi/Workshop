@@ -218,54 +218,43 @@ Then run the PCA (adjust the number of threads accordingly)
 We can then plot the results (PC1 vs PC2) in R as follows (don't forget to upload pop metadata files for PCA, admixture, FST to your github!);
 	R code
 
-## Step 3\. Plot PCA results - Let's add the plotly PCA results (embed html)!
+## Step 3\. Copy file to/from the Docker container (volume) to local computer
 
-How do we interpet the results (add html results to Github tutorial!). We find three distinct clusters. Let's add map to githubs totorial. How much variance is explained by the first two PCs? Provide links/references on how to interpret/not interpret PCA results
+Copy files to/from container (volume) to local filesystem (here we create a temporary container (named temp) with our named volume mounted)
+
+	docker run --name temp --mount source=myvol3,target=/data -w /data ubuntu
+	docker cp temp:/data/Workshop/Data/GL_95inds.pcangsd.cov ./Desktop/Test/
+	#remove/detach docker contained after copying
+
+## Step 4\. Plot PCA results - Let's add the plotly PCA results (embed html)!
+
+How do we interpet the results (add html results to Github tutorial!). We find three distinct clusters. Let's add map to githubs totorial. How much variance is explained by the first two PCs? Provide links/references on how to interpret/not interpret PCA results. While PCA plots can sometimes be relatively straightforward to interpret (as here), 
+
+[(Meisner & Albrechtsen 2018)](https://academic.oup.com/genetics/article/210/2/719/5931101)
+
+[(Gompert & Buerkle 2016)] (https://onlinelibrary.wiley.com/doi/full/10.1111/eva.12380)
+[(Novembre & Stephens 2008)] (https://www.nature.com/articles/ng.139)
+[(François et al. 2010)] (https://academic.oup.com/mbe/article/27/6/1257/1109324)
 
 # Admixture and ancestry analysis
 
-In some cases we also want to infer genome-wide admixture proportions
-for each individuals. Similar to PCA, there are different ways of
-inferring admixture proportions from genotype likelihoods. Here, we will
-use [ngsAdmix](http://www.popgen.dk/software/index.php/NgsAdmix) and
-will also present a way of inferring admixture proportions with PCAngsd.
-Similar to the PCA, we want to use an LD-pruned SNP dataset for this
-analysis to reduce the impact of non-independent SNPs on the ancestry
-inference.
+In some cases we also want to infer genome-wide admixture proportions for each individuals. Similar to PCA, there are different ways of inferring admixture proportions from genotype likelihoods. Here, we will use [ngsAdmix](http://www.popgen.dk/software/index.php/NgsAdmix) and will also present a way of inferring admixture proportions with PCAngsd. Similar to the PCA, we want to use an LD-pruned SNP dataset for this analysis to reduce the impact of non-independent SNPs on the ancestry inference.
 
-ngsAdmix uses a genotype likelihood file in beagle format (same as for
-PCAngsd) as input, which is specified using the `-likes` option. In
-addition, there are a range of parameters that can be adjusted. Here we
-only set the number of ancestry clusters using the `-K` option to K=2.
-In reality, it is advisable to compare different numbers of ancestry
-clusters by iterating over different values of K.
+ngsAdmix uses a genotype likelihood file in beagle format (same as for PCAngsd) as input, which is specified using the `-likes` option. In addition, there are a range of parameters that can be adjusted. Here we only set the number of ancestry clusters using the `-K` option to K=2. In reality, it is advisable to compare different numbers of ancestry clusters by iterating over different values of K.
 
-In case the analysis is not converging, one can also increase the
-maximum number of EM iterations using the `-maxiter` option.
+In case the analysis is not converging, one can also increase the maximum number of EM iterations using the `-maxiter` option.
 
 ngsAdmix produces three different outputs files:
 
-  - A run log containing the log likelihood of the admixture estimates:
-    `.log file`
-  - A file containing the allele frequencies of all ancestral
-    populations (in this case two ancestral clusters): `.fopt file`
-  - A file containing the admixture proportions for each individual:
-    `.qopt file`
+  - A run log containing the log likelihood of the admixture estimates:`.log file`
+  - A file containing the allele frequencies of all ancestral populations (in this case two ancestral clusters): `.fopt file`
+  - A file containing the admixture proportions for each individual:`.qopt file`
 
-We are mostly interested in the admixture proportions and the log
-likelihood of the estimates. The log likelihoods can be compared between
-runs with different values of K to select the most likely number of
-ancestral clusters (However, this should always be interpreted in a
-biologically meaningful context)
+We are mostly interested in the admixture proportions and the log likelihood of the estimates. The log likelihoods can be compared between runs with different values of K to select the most likely number of ancestral clusters (However, this should always be interpreted in a biologically meaningful context)
 
-In addition to ngsAdmix, PCAngsd can also be used to infer admixture
-proportions. The command is similar to the one used for the PCA with the
-addition of to a `-admix` option. The input file for ngsAdmix and
-PCAngsd is the same, making comparisons relatively easy.
+In addition to ngsAdmix, PCAngsd can also be used to infer admixture proportions. The command is similar to the one used for the PCA with the addition of to a `-admix` option. The input file for ngsAdmix and PCAngsd is the same, making comparisons relatively easy.
 
-Other than ngsAdmix, PCAngsd can automatically infer the most likely
-number of ancestry cluster. However, one can also set the number of
-clusters using the `-admix_K` option.
+Other than ngsAdmix, PCAngsd can automatically infer the most likely number of ancestry cluster. However, one can also set the number of clusters using the `-admix_K` option.
 
 Here, we have PCangsd output individual admixture proportions (-admix), and also output population specific allele frequencies (-admix_save). We iterate over K (here via the -e argument which defines the number of eigenvalues, rather than via -admix _K as the latter is not recommended).
 
@@ -289,6 +278,12 @@ Copy files to/from container (volume) to local filesystem (here we create a temp
 	docker cp temp:/data/Workshop/Data/GL_95inds.pcangsd.cov ./Desktop/Test/
 	docker cp temp:/data/Workshop/Data/admix_results ./Desktop/Test/
 	#remove/detach docker contained after copying
+
+
+
+[(Puechmaille 2016)] (https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12512)
+[(Gilbert 2016)] (https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12521)
+[(Lawson et al. 2018)] (https://www.nature.com/articles/s41467-018-05257-7)
 
 
 # Site frequency spectrum and summary statistics
