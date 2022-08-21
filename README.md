@@ -6,6 +6,12 @@
   - [Programs we will use](#programs-we-will-use)
   - [Instructions - preparing our Docker containers](#instructions---preparing-our-docker-containers)
       - [1. Open Docker](#step-1-open-docker)
+      - [2. Running Ubuntu on Docker](#step-2-running-ubuntu-on-docker)
+      - [3. Pulling Docker images](#step-3-pulling-docker-images)
+      - [4. Creating and mounting a volume](#step-4-creating-and-mounting-a-volume)
+      - [5. Download data](#step-5-download-data)
+      - [6. Getting a hand with command-line in Docker](#step-6-getting-a-hand-with-command---line-in-docker)
+      - [7. Index files](#step-7-index-files)
       - [2. Alternative approach: Covariance matrix estimation with
         PCAngsd](#2-alternative-approach-covariance-matrix-estimation-with-pcangsd)
           - [Question](#question-1)
