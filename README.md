@@ -183,7 +183,7 @@ Have a look [here](https://setosa.io/ev/principal-component-analysis) to intuiti
 
 For NGS data, each variant site (e.g. single nucleotide polymorphism (SNP)) represents one dimesion (or axis) of variation. Thus, if we have 1 million SNPs, we have 1 million dimensions (or axes) of variation. Obviously, this would be extremely difficult to visualise without some sort of transformation applied (we can normally only visualise 2-3 axes at once). Additionally, many SNPs will be highly correlated (linked), meaning that PCA can be highly effective at reducing the dimensionality of the dataset while retaining most of the variance.
 
-To perform PCA, we want to find a rotation and scaling of the data to find new set of orthogonal axes that maximuse variation within the data. We can do this easily on a genotype table, e.g. in R, SNPRelate or other tools, however, recall that for low-coverage data, we potentially have a large uncertainty in genotype calls and consequently in variant calls. The tool that we will use, PCAngsd performs PCA by first estimating individual allele frequencies (in an iterative approach), and then using the estimated individual allele frequencies as prior information for unobserved genotypes (in the data) to estimate a genetic covariance matrix (Meisner & Albrechtsen 2018).
+To perform PCA, we want to find a rotation and scaling of the data to find new set of orthogonal axes that maximuse variation within the data. We can do this easily on a genotype table, e.g. in R, SNPRelate or other tools, however, recall that for low-coverage data, we potentially have a large uncertainty in genotype calls and consequently in variant calls. The tool that we will use, PCAngsd performs PCA by first estimating individual allele frequencies (in an iterative approach), and then using the estimated individual allele frequencies as prior information for unobserved genotypes (in the data) to estimate a genetic covariance matrix [(Meisner & Albrechtsen 2018)](https://academic.oup.com/genetics/article/210/2/719/5931101).
 
 <br>
 
@@ -294,6 +294,8 @@ Copy files to/from container (volume) to local filesystem (here we create a temp
 # Site frequency spectrum and summary statistics
 
 ## For single populations
+Talk about SFS, summary stats, etc. mention e.g. use of stairway plot.
+
 	for i in $(seq 1 15); do
 		pop=`sed -n ${i}p < pop5inds.list`
 		pop_bamlist='./Population_lists_5inds/'${pop}.5inds
@@ -335,3 +337,4 @@ Note that calling e.g. -n 4 and -P 16 allows better CPU usage as it allows for h
 
 # optional: dadi
 # optional: selscan (requires vcfs)
+
