@@ -25,7 +25,7 @@
 
 ## Why go low-coverage?
 
-**Experimental design** All scientific lines of inquiry start with a question. From this question, we (the researcher) tries to come up with an experimental design to best address said question. If money and time were no object, we may e.g. plan for an experiment with 10 treatments, 10 replicates per treatment, and 1000 samples per replicate. However, in the real world, the experimental design is not determined purely by how best to address the biological question at hand, but also by *cost, time and technical feasibility*.
+**Experimental design** All scientific lines of inquiry start with a question. From this question, we (the researcher) try to come up with an experimental design to best address said question. If money and time were no object, we may e.g. plan for an experiment with 10 treatments, 10 replicates per treatment, and 1000 samples per replicate. However, in the real world, the experimental design is not determined purely by how best to address the biological question at hand, but also by *cost, time and technical feasibility*.
 
 Typically, we are faced with the following trade-off; of having either **1)** more samples at the expense of data per sample or **2)** less samples but with more data per sample.
 
@@ -41,7 +41,7 @@ With respect to sequencing and genetic data, if we start with the perfect or com
 
 The answer can be difficult, and lies in weighing the respective advantages and disadvantages of these two alternatives, in the context of the biological question at hand. Briefly, both approaches have their caveats. For the former (i.e. subset of genetic markers), we **1)** assume the sub-selection of the genome to be representative of the whole genome, **2)** are prone to ascertainment bias, and **3)** lack data in unsequenced parts of the genome which prohibits detection of new, potentially interesting genetic variants. For the latter (low-coverage sequencing), our certainty in the genotype call (i.e. whether something is **A**, **C**, **T** or **G**) is much lower, due to the fact that we are reading each position fewer times, and hence are prone to more sequencing errors in our genotype calls. Further, the power to detect rare variants is strongly diminished.
 
-That said, in the last years (for both cases), there has been notable advances in alleviating these respective downsides. For the former, modern sequencing techniques provide more and more markers (at increasingly cheaper prices), while for the latter, we now have methods that explicitly accommodate the uncertainty in genotype calls in analyses, or put another way, we do not have to explicitly call genotypes but rather we can consider their genotype likelihoods instead (aka the probability of the data given a specific genotype).
+That said, in the last years (for both cases), there has been notable advances in alleviating these respective downsides. For the former, modern sequencing techniques provide more markers (at increasingly cheaper prices), while for the latter, we now have methods that explicitly accommodate the uncertainty in genotype calls in analyses (i.e., rather than having to explicitly call genotypes, we consider their genotype likelihoods instead, aka the probability of the data given a specific genotype).
 
 Low-coverage methods also lend themselves well to the sequencing and analysis of ancient DNA, where high-coverage, high-quality DNA sequences may not be attainable.
 
@@ -124,7 +124,7 @@ We have now "pulled" the necessary programs into Docker. We now need the data. F
 	apt update
 	apt install git
 
-While we're at it, let's install a text editor too (vim nano).
+While we are at it, let's install a text editor too (vim nano).
 
 	apt-get install vim nano
 
@@ -175,27 +175,20 @@ Index all the BAM files (here we'll do this in a for loop):
 
 # Principle component analysis
 
-What is principle component analysis (PCA)? PCA is a method that reduces the dimensionality of a dataset to emphasize variation and bring out strong (and more easily) interpretable) patterns in a dataset. It does this by transforming a large set of (potentially correlated) variables into a smaller set of uncorrelated variables while minimising information loss.
+Principle component analysis (PCA) is a method that reduces the dimensionality of a dataset to emphasize variation and thus bring out strong (and more easily) interpretable patterns in a dataset. It does so by transforming a large set of (potentially correlated) variables into a smaller set of uncorrelated variables while minimising information loss.
 
-We can visualise how a PCA works through this helpful, interactive link:
+Have a look [here](https://setosa.io/ev/principal-component-analysis) to intuitively see how this is done.
 
-https://setosa.io/ev/principal-component-analysis/ - link or embed!
+For NGS data, each variant site (e.g. single nucleotide polymorphism (SNP)) represents one dimesion (or axis) of variation. Thus, if we have 1 million SNPs, we have 1 million dimensions (or axes) of variation. Obviously, this would be extremely difficult to visualise without some sort of transformation applied (we can normally only visualise 2-3 axes at once). Additionally, many SNPs will be highly correlated (linked), meaning that PCA can be highly effective at reducing the dimensionality of the dataset while retaining most of the variance.
 
-<iframe
-  src="https://setosa.io/ev/principal-component-analysis"
-  style="width:100%; height:300px;"
-></iframe>
+To perform PCA, we want to find a rotation and scaling of the data to find new set of orthogonal axes that maximuse variation within the data. We can do this easily on a genotype table, e.g. in R, SNPRelate or other tools, however, recall that for low-coverage data, we potentially have a large uncertainty in genotype calls and consequently in variant calls. The tool that we will use, PCAngsd performs PCA by first estimating individual allele frequencies (in an iterative approach), and then using the estimated individual allele frequencies as prior information for unobserved genotypes (in the data) to estimate a genetic covariance matrix (Meisner & Albrechtsen 2018).
 
+<br>
 
-For NGS data, each variant site (e.g. single nucleotide polymorphism (SNP)) represents one dimesion (axis) of variation. So if we have 1 million SNPs, we have 1 million dimensions (axes) of variation. Obviously, this would be extremely difficult to visualise without some sort of transformation (we can normally only visualise 2-3 axes at once). Additionally, many SNPs will be highly correlated (linked), e.g. think height and weight, implying the a dimension-reduction method like PCA can be highly effective at reducing the dimensionality of the dataset while retaining most of the variance.
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_admix.gif" width="800"> 
 
-So we want to find a a rotation and scaling of the data to find axes that maximuse variation within the data. We can do this simply, e.g. in R or other tools (eg. SNP relate), however recall we have low coverage data, and our certainty in genotype calls and consequently variant calls will be high. So we want to work with genoytpe likelihoods.
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_pca.png" width="800"> 
 
-Also (refer to PCAngsd website), missing data in these normal algorithms typically impute missing data as the the mean/zero, which leads to particular behaviour.
-
-Add pic from PCAngsd
-
-To perform PCA on lowcov data,  we have to infer the genetic covariance matrix, which can be estimated in different ways. Here we'll use PCANGSD. See lcs and pcangsd tutorials.
 
 ## Step 1. PCAngsd takes as input genotype likelihoods in beagle format, which we generated in the step before using the `-doGLF 2`option.
 
