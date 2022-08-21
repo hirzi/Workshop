@@ -10,20 +10,14 @@
       - [3. Pulling Docker images](#step-3-pulling-docker-images)
       - [4. Creating and mounting a volume](#step-4-creating-and-mounting-a-volume)
       - [5. Download data](#step-5-download-data)
-      - [6. Getting a hand with command-line in Docker](#step-6-getting-a-hand-with-command---line-in-docker)
+      - [6. Getting a hand with command-line in Docker](#step-6-getting-a-hand-with-command\-line-in-docker)
       - [7. Index files](#step-7-index-files)
-      - [2. Alternative approach: Covariance matrix estimation with
-        PCAngsd](#2-alternative-approach-covariance-matrix-estimation-with-pcangsd)
-          - [Question](#question-1)
-      - [Optional: Compare the results to a PCA based on all
-        SNPs](#optional-compare-the-results-to-a-pca-based-on-all-snps)
-          - [Question:](#question-2)
-          - [Question:](#question-3)
-      - [Admixture analysis](#admixture-analysis)
-          - [ngsAdmix](#ngsadmix)
-              - [Question:](#question-4)
-          - [Alternative approach:
-            PCAngsd](#alternative-approach-pcangsd)
+  - [Principle component analysis (PCA)](#principle-component-analysis-(PCA))
+  - [Admixture/ancestry analysis](#Admixture-and-ancestry-analysis)
+  - [Site frequency spectrum and summary statistics](#site-frequency-spectrum-and-summary-statistics)
+      - [For single populations](#for-single-populations)
+      - [For two populations; population genetic differentiation](#for-two-populations\;-population-genetic-differentiation)
+      - [For three populations](#for-three-populations)
 
 <br> <br>
 
@@ -45,7 +39,7 @@ With respect to sequencing and genetic data, if we start with the perfect or com
 
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/breadth_vs_depth.png" width="800"> 
 
-The answer can be difficult, and lies in weighing the respective advantages and disadvantages of these two alternatives, in the context of the biological question at hand. Briefly, both approaches have their caveats. For the former (i.e. subset of genetic markers), we **1)** assume the sub-selection of the genome to be representative of the whole genome, **2)** are prone to ascertainment bias, and **3)** lack data in unsequenced parts of the genome which prohibits detection of new, potentially interesting genetic variants. For the latter (low-coverage sequencing), our certainty in the genotype call (i.e. whether something is **A**, **C**, **T** or **G**) is much lower, due to the fact that we are reading each position fewer times, and hence are prone to more sequencing errors in our genotype calls.
+The answer can be difficult, and lies in weighing the respective advantages and disadvantages of these two alternatives, in the context of the biological question at hand. Briefly, both approaches have their caveats. For the former (i.e. subset of genetic markers), we **1)** assume the sub-selection of the genome to be representative of the whole genome, **2)** are prone to ascertainment bias, and **3)** lack data in unsequenced parts of the genome which prohibits detection of new, potentially interesting genetic variants. For the latter (low-coverage sequencing), our certainty in the genotype call (i.e. whether something is **A**, **C**, **T** or **G**) is much lower, due to the fact that we are reading each position fewer times, and hence are prone to more sequencing errors in our genotype calls. Further, the power to detect rare variants is strongly diminished.
 
 That said, in the last years (for both cases), there has been notable advances in alleviating these respective downsides. For the former, modern sequencing techniques provide more and more markers (at increasingly cheaper prices), while for the latter, we now have methods that explicitly accommodate the uncertainty in genotype calls in analyses, or put another way, we do not have to explicitly call genotypes but rather we can consider their genotype likelihoods instead (aka the probability of the data given a specific genotype).
 
@@ -232,7 +226,7 @@ And then perform the PCA (adjusting the number of threads accordingly)
 
 # How do we interpet the results (add html results to Github tutorial!). We find three distinct clusters. Let's add map to githubs totorial. How much variance is explained by the first two PCs? Provide links/references on how to interpret/not interpret PCA results
 
-# Admixture/ancestry analysis
+# Admixture and ancestry analysis
 
 In some cases we also want to infer genome-wide admixture proportions
 for each individuals. Similar to PCA, there are different ways of
