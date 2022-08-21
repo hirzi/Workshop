@@ -76,6 +76,7 @@ We will be working almost exclusively through the command-line in docker, so if 
 We will be working with low-coverage whole-genome sequencing (WGS) data (average 2x) of a plant species *Dianthus sylvetris* (Wood pink). This is a perennial plant species that grows throughout the mountain ranges of Europe (e.g. Alps, Apennines & Dinarides). Given the European mountain ranges experienced repeated bouts expansion and recession of glacial ice sheets during the last ca. 2 million years (the Quaternary glaciations or "ice ages"), this species likely experienced a complex and dynamic demographic history. Additionally, this species inhabits a large elevational range (0 - 2500 meters), with the consequence that contemporary populations exhibit a remarkable degree of local adaptation in phenotypic and life history traits. Thee genetic bases of these observed adaptations, however, remain unknown.
 
 The populations and data that we will use in this workshop represents a small subset from a larger study that covered the geographic and ecological range of the species (https://www.biorxiv.org/content/10.1101/2022.06.07.495159v1). Our data is in BAM format (i.e. mapped sequencing data) and span a ~2MB region from four scaffolds selected at random across the genome. (may want to extract an interesting region for FST/PBS analysis, 15 inds pops. alternatively, consider taking data directly from Simons's data and do FST scans. Oruse selscan on vcf). We will use this data to interogate this species' population structure via principle component analysis (PCA) and admixtre/ancestry analysis.
+
 <br>
 
 # Workshop - programs we will use
@@ -172,6 +173,7 @@ Index all the BAM files (here we'll do this in a for loop):
 
 !!!!!!!!!!!!!!! Make sample list (let's actually have this in the Github, in case htere are difference with file ordering)
 !!!!!!!!!!!!!!!#ls *bam > samples.list
+
 <br>
 
 
