@@ -1,34 +1,32 @@
-# Workshop 4 - Population structure & demography (low-coverage whole genome sequencing data)
+# Inferring population structure & demography from low-coverage whole genome sequencing data
 
-## Why go low?
+## Why go low-coverage?
 
-**Experimental design** All scientific lines of inquiry start with a question. From this question, the researcher comes up with an experimental design that can best address said question. If money and time were no object, the researcher would e.g. plan for an experiment with 10 treatments, 10 replicates per treatment, and 1000 samples per replicate. However, in the real world, the experimental design is not determined purely by how best to address the biological question at hand, but also by cost, time and technical feasibility.
+**Experimental design** All scientific lines of inquiry start with a question. From this question, one comes up with an experimental design to best address said question. If money and time were no object, one may e.g. plan for an experiment with 10 treatments, 10 replicates per treatment, and 1000 samples per replicate. However, in the real world, the experimental design is not determined purely by how best to address the biological question at hand, but also by *cost, time and technical feasibility*.
+
+Typically, one is faced with the following trade-off; of having either **1)** more samples at the expense of data per sample or **2)** less samples but with more data per sample.
 
 <br>
 
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Experimental_design.png" width="800"> 
 
-Generally, one is faced with the following trade-off; of having either **1)** more samples at the expense of data per sample or **2)** less samples but with more data per sample.
-
-With respect to  genetics and sequencing, if we start with the perfect or complete representation of a unit data as the whole genome sequenced at high coverage (e.g. 50x), less data can imply 1 of two things: 1) sequencing a reduced or sub- representation of the genome, i.e. using genetic markers like microsats and SNPs or 2) sequencing the whole genome but at low coverage. I.e. a trade-off of breadth vs depth. To give a concrete example, imagine you had enough money to sequence 1 million reads, and that this is sufficient to sequence your whole genome at 2x or 10% of your genome at 20X, which would you choose? 
+With respect to sequencing and genetic data, if we start with the perfect or complete representation of a unit data as the whole genome sequenced at high coverage (e.g. 50x), less data can imply one of two things: **1)** sequencing a reduced or sub-representation of the genome, i.e. using genetic markers like microsatellites and sets of single nucleotide polymorphisms (SNPs) or **2)** sequencing the whole genome but at low coverage (depth). I.e. a trade-off of breadth vs depth. To give a concrete example, imagine you had enough money to sequence 1 million reads, and that this is sufficient to sequence your whole genome at 2x or 10% of your genome at 20X, *which would you choose*? 
 
 <br> 
 
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/breadth_vs_depth.png" width="800"> 
 
-The answer can be difficult, and lies in weighing the respective advantages and disadvantages of these 2 alternatives, in the context of the biological question at hand.
-Briefly, both approaches have their caveats. For the former (i.e. genetic markers), you make the assumption that your sub-selection of the genome is representative of the whole genome, you are prone to ascertainment bias, and you lack data in unsequenced parts of the genome, hence making it inappropriate for e.g. when looking for new genetic variants. For the latter (low-coverage), you’re certainty in the genotype call (whether something is A,C,T,G) is much lower, due to the fact that you’re reading each position fewer times, and hence you’re prone to more sequencing errors in your genotype calls.
+The answer can be difficult, and lies in weighing the respective advantages and disadvantages of these two alternatives, in the context of the biological question at hand. Briefly, both approaches have their caveats. For the former (i.e. subset of genetic markers), one **1)** assumes the sub-selection of the genome to be representative of the whole genome, **2)** is prone to ascertainment bias, and **3)** lacks data in unsequenced parts of the genome which prohibits detection of new, potentially interesting genetic variants. For the latter (low-coverage sequencing), one's certainty in the genotype call (i.e. whether something is **A**, **C**, **T** or **G**) is much lower, due to the fact that one is reading each position fewer times, and hence one is prone to more sequencing errors in one' genotype calls.
 
-That said, in the last years for both cases, there has been notable advances in alleviating these respective downsides. For the former, we’ve steadily been developing techniques which provide more and more markers, while for the latter, we now have methods that explicitly accommodate the uncertainty in genotype calls in our analysis, or put another way, we don’t have to explicitly call genotypes but rather we can consider their genotype likelihoods instead (aka the probability of the data given a specific genotype).
+That said, in the last years, for both cases, there has been notable advances in alleviating these respective downsides. For the former, we’ve steadily been developing techniques which provide more and more markers, while for the latter, we now have methods that explicitly accommodate the uncertainty in genotype calls in our analysis, or put another way, we don’t have to explicitly call genotypes but rather we can consider their genotype likelihoods instead (aka the probability of the data given a specific genotype).
 
 Low-coverage methods also lend themselves well to the sequencing and analysis of ancient DNA, where high-coverage, high-quality DNA sequences may not be easily attainable.
 
 To be concise, it is the statistic propagation of uncertainty from raw sequenving data to downstream analysis (via working with genotyp likelihoods rather than discrete (lossy) genotype calls) that make low-coverage methods useful. The effect may be huge at low coverage or minimal/negligable at high coverage (where results will tend to converge to classical genotype-call based methods). By working directly with genotype likelihoods, less lossy) steps (e.g. genotype calling, various filtering) need to be performed, leading to less loss of potentially informative data.
 
-# Workshop 4 (morning session) goals.
+# Workshop 4 - Population structure & demography
 
-In this session you will learn how to use low-coverage whole genome data
-to do:
+In this session you will learn how to use low-coverage whole genome data to infer population structure and admixture (ancestry), via two methods:
 
   - Principal Components Analysis (PCA)
   - Admixture analysis
