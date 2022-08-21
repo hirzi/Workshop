@@ -2,9 +2,9 @@
 
 ## Why go low-coverage?
 
-**Experimental design** All scientific lines of inquiry start with a question. From this question, one comes up with an experimental design to best address said question. If money and time were no object, one may e.g. plan for an experiment with 10 treatments, 10 replicates per treatment, and 1000 samples per replicate. However, in the real world, the experimental design is not determined purely by how best to address the biological question at hand, but also by *cost, time and technical feasibility*.
+**Experimental design** All scientific lines of inquiry start with a question. From this question, we (the researcher) tries to come up with an experimental design to best address said question. If money and time were no object, we may e.g. plan for an experiment with 10 treatments, 10 replicates per treatment, and 1000 samples per replicate. However, in the real world, the experimental design is not determined purely by how best to address the biological question at hand, but also by *cost, time and technical feasibility*.
 
-Typically, one is faced with the following trade-off; of having either **1)** more samples at the expense of data per sample or **2)** less samples but with more data per sample.
+Typically, we are faced with the following trade-off; of having either **1)** more samples at the expense of data per sample or **2)** less samples but with more data per sample.
 
 <br>
 
@@ -12,53 +12,60 @@ Typically, one is faced with the following trade-off; of having either **1)** mo
 
 With respect to sequencing and genetic data, if we start with the perfect or complete representation of a unit data as the whole genome sequenced at high coverage (e.g. 50x), less data can imply one of two things: **1)** sequencing a reduced or sub-representation of the genome, i.e. using genetic markers like microsatellites and sets of single nucleotide polymorphisms (SNPs) or **2)** sequencing the whole genome but at low coverage (depth). I.e. a trade-off of breadth vs depth. To give a concrete example, imagine you had enough money to sequence 1 million reads, and that this is sufficient to sequence your whole genome at 2x or 10% of your genome at 20X, *which would you choose*? 
 
-<br> 
+<br>
 
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/breadth_vs_depth.png" width="800"> 
 
-The answer can be difficult, and lies in weighing the respective advantages and disadvantages of these two alternatives, in the context of the biological question at hand. Briefly, both approaches have their caveats. For the former (i.e. subset of genetic markers), one **1)** assumes the sub-selection of the genome to be representative of the whole genome, **2)** is prone to ascertainment bias, and **3)** lacks data in unsequenced parts of the genome which prohibits detection of new, potentially interesting genetic variants. For the latter (low-coverage sequencing), one's certainty in the genotype call (i.e. whether something is **A**, **C**, **T** or **G**) is much lower, due to the fact that one is reading each position fewer times, and hence one is prone to more sequencing errors in one' genotype calls.
+The answer can be difficult, and lies in weighing the respective advantages and disadvantages of these two alternatives, in the context of the biological question at hand. Briefly, both approaches have their caveats. For the former (i.e. subset of genetic markers), we **1)** assume the sub-selection of the genome to be representative of the whole genome, **2)** are prone to ascertainment bias, and **3)** lack data in unsequenced parts of the genome which prohibits detection of new, potentially interesting genetic variants. For the latter (low-coverage sequencing), our certainty in the genotype call (i.e. whether something is **A**, **C**, **T** or **G**) is much lower, due to the fact that we are reading each position fewer times, and hence are prone to more sequencing errors in our genotype calls.
 
-That said, in the last years, for both cases, there has been notable advances in alleviating these respective downsides. For the former, we’ve steadily been developing techniques which provide more and more markers, while for the latter, we now have methods that explicitly accommodate the uncertainty in genotype calls in our analysis, or put another way, we don’t have to explicitly call genotypes but rather we can consider their genotype likelihoods instead (aka the probability of the data given a specific genotype).
+That said, in the last years (for both cases), there has been notable advances in alleviating these respective downsides. For the former, modern sequencing techniques provide more and more markers (at increasingly cheaper prices), while for the latter, we now have methods that explicitly accommodate the uncertainty in genotype calls in analyses, or put another way, we do not have to explicitly call genotypes but rather we can consider their genotype likelihoods instead (aka the probability of the data given a specific genotype).
 
-Low-coverage methods also lend themselves well to the sequencing and analysis of ancient DNA, where high-coverage, high-quality DNA sequences may not be easily attainable.
+Low-coverage methods also lend themselves well to the sequencing and analysis of ancient DNA, where high-coverage, high-quality DNA sequences may not be attainable.
 
-To be concise, it is the statistic propagation of uncertainty from raw sequenving data to downstream analysis (via working with genotyp likelihoods rather than discrete (lossy) genotype calls) that make low-coverage methods useful. The effect may be huge at low coverage or minimal/negligable at high coverage (where results will tend to converge to classical genotype-call based methods). By working directly with genotype likelihoods, less lossy) steps (e.g. genotype calling, various filtering) need to be performed, leading to less loss of potentially informative data.
+
+**Summary** - Through working with genotype likelihoods rather than relying on discrete (lossy) genotype calls, low-coverage methods are useful for they allow for the statistical propagation of uncertainty from raw sequencing data to downstream analysis. The effect may be huge for data at low-coverage or minimal for data at high-coverage (where analytical results will tend to converge between low-coverage methods and classical genotype-call based methods). In addition, working directly with genotype likelihoods generally involves fewer (potentially lossy) processing steps, e.g. genotype calling and various filtering.
+
+<br>
 
 # Workshop 4 - Population structure & demography
 
 In this session you will learn how to use low-coverage whole genome data to infer population structure and admixture (ancestry), via two methods:
 
-  - Principal Components Analysis (PCA)
-  - Admixture analysis
+  - **Principal Components Analysis (PCA)*
+  - **Admixture analysis**
 
 # Initial preparation
 
-Population genetic analyses of NGS data is typically run on large linux-based computing clusters. For this workshop, since we don't have access to this, we will be running/performing population genetic analyses in Docker. 
+Population genetic analyses of NGS data is typically run on large linux-based computing clusters. For this workshop, since we do not have access to this, we will be running population genetic analyses in **Docker**. 
 
 ## What is Docker?
 Docker is an open source container based technology that runs in an isolated, self-contained package that can be efficiently distributed and executed in a portable manner across a wide range of computing platforms. Containerization in concept is very similar to virtualization, i.e. a method of isolating an application from the underlying machine operating system. The difference between virtual machines and containers is that containers do not require a full operating system to operate but rather the application and dependencies, means they are much smaller in size (Gharib 2018). 
 
-## 1. Make sure you have Docker Desktop installed on your computer
-Instructions for intalling Docker can be found [here](https://www.docker.com/get-started/), with links (including minimum system requirements) for [Windows](https://docs.docker.com/desktop/install/windows-install/), [Mac](https://docs.docker.com/desktop/install/mac-install/) and [Linux](https://docs.docker.com/desktop/linux/).
+## Step 1. Make sure you have Docker Desktop installed on your computer
+Instructions for intalling Docker can be found [here](https://www.docker.com/get-started/), with OS-specific information (including minimum system requirements) and download links for [Windows](https://docs.docker.com/desktop/install/windows-install/), [Mac](https://docs.docker.com/desktop/install/mac-install/) and [Linux](https://docs.docker.com/desktop/linux/).
 
-## 2. Make sure you are familiar with the basics of bash shell scripting
-We will be working almost exclusively through the command line in docker, so if you have not used shell scripting before or are getting rusty on it, it may be helpful to have a look at a tutorial like [this one](https://linuxconfig.org/bash-scripting-tutorial-for-beginners) or a cheat sheet like [this one](https://bioinformaticsworkbook.org/Appendix/Unix/UnixCheatSheet.html#gsc.tab=0) before proceeding to the next step.
+## Step 2. Make sure you are familiar with the basics of bash shell scripting
+We will be working almost exclusively through the command-line in docker, so if you have not used shell scripting before or are getting rusty with it, it may be helpful to have a look at a tutorial like [this](https://linuxconfig.org/bash-scripting-tutorial-for-beginners) or a cheat sheet like [this](https://bioinformaticsworkbook.org/Appendix/Unix/UnixCheatSheet.html#gsc.tab=0) before proceeding with this workshop.
 
 # Workshop data
 
-We will be working with low-coverage NGS date (average 2x) of a plant species Dianthus sylvetris (Wood pink). This is a perennial plant species that grows throughout the mountain ranges of Europe (Alps, Apennines, Dinarides). Because the European mountain ranges experienced repeated bouts expansion and recession of glacial ice sheets during the last ca. 2 million years (the Quaternary glaciations or "ice ages"), this species likely experienced a complex demographic history. Additionally, the species inhabits a large elevational range (0-2500m), with the consequence that contemporary populations exhibit a remarkable degree of local adaptation in phenotypic and life history traits. We are interested to investigate the genetic bases of these observed adaptations.
+We will be working with low-coverage whole-genome sequencing (WGS) data (average 2x) of a plant species *Dianthus sylvetris* (Wood pink). This is a perennial plant species that grows throughout the mountain ranges of Europe (e.g. Alps, Apennines & Dinarides). Given the European mountain ranges experienced repeated bouts expansion and recession of glacial ice sheets during the last ca. 2 million years (the Quaternary glaciations or "ice ages"), this species likely experienced a complex and dynamic demographic history. Additionally, this species inhabits a large elevational range (0 - 2500 meters), with the consequence that contemporary populations exhibit a remarkable degree of local adaptation in phenotypic and life history traits. Thee genetic bases of these observed adaptations, however, remain unknown.
 
-The populations and data that we will use in this workshop represents a small subset from a larger study that covered the geograpihc and ecologcal range of the species (https://www.biorxiv.org/content/10.1101/2022.06.07.495159v1). Our NGS data is in BAM format (i.e. mapped sequencing data) and span a ~2MB region from 4 scaffolds selected at random across genome. (may want to extract an interesting region for FST/PBS analysis, 15 inds pops. alternatively, consider taking data directly from Simons's data and do FST scans. Oruse selscan on vcf). We will use this data to interogate this species' population structure via principle component analysis (PCA) and admixtre/ancestry analysis.
+The populations and data that we will use in this workshop represents a small subset from a larger study that covered the geograpihc and ecologcal range of the species (https://www.biorxiv.org/content/10.1101/2022.06.07.495159v1). Our data is in BAM format (i.e. mapped sequencing data) and span a ~2MB region from four scaffolds selected at random across the genome. (may want to extract an interesting region for FST/PBS analysis, 15 inds pops. alternatively, consider taking data directly from Simons's data and do FST scans. Oruse selscan on vcf). We will use this data to interogate this species' population structure via principle component analysis (PCA) and admixtre/ancestry analysis.
 
 
-# Programs
+# Programs we will use
 For this practical, we will be using:
-[SAMtools](https://www.htslib.org/),
+[SAMtools](https://www.htslib.org/)
+
 [ANGSD](http://popgen.dk/wiki/index.php/ANGSD) (Analysis of Next
-Generation Sequencing Data),
-[ngsAdmix](http://www.popgen.dk/software/index.php/NgsAdmix) and
-[PCAngsd](http://www.popgen.dk/software/index.php/PCAngsd).
-We will run the programs in a Docker container so there is no need to install these programs locally on your computer.
+Generation Sequencing Data)
+
+[PCAngsd](http://www.popgen.dk/software/index.php/PCAngsd)
+
+[ngsAdmix](http://www.popgen.dk/software/index.php/NgsAdmix) (think if want to include!)
+
+We will run these programs in Docker containers so there is no need to install these programs locally on your computer.
 
 # Instructions - preparing our Docker containers
 
