@@ -3,7 +3,7 @@
   - [Introduction](#introduction)
   - [Workshop - initial preparation](#workshop---initial-preparation)
   - [Workshop - data](#workshop---data)
-  - [Programs we will use](#programs-we-will-use)
+  - [Workshop - programs we will use](#workshop---programs-we-will-use)
   - [Instructions - preparing our Docker containers](#instructions---preparing-our-docker-containers)
       - [1. Open Docker](#step-1-open-docker)
       - [2. Running Ubuntu on Docker](#step-2-running-ubuntu-on-docker)
@@ -59,7 +59,7 @@ In this session you will learn how to use low-coverage whole genome data to infe
 
 Population genetic analyses of NGS data is typically run on large linux-based computing clusters. For this workshop, since we do not have access to this, we will be running population genetic analyses in **Docker**. 
 
-## What is Docker?
+### What is Docker?
 Docker is an open source container based technology that runs in an isolated, self-contained package that can be efficiently distributed and executed in a portable manner across a wide range of computing platforms. Containerization in concept is very similar to virtualization, i.e. a method of isolating an application from the underlying machine operating system. The difference between virtual machines and containers is that containers do not require a full operating system to operate but rather the application and dependencies, means they are much smaller in size (Gharib 2018). 
 
 ## Step 1. Make sure you have Docker Desktop installed on your computer
@@ -75,7 +75,7 @@ We will be working with low-coverage whole-genome sequencing (WGS) data (average
 The populations and data that we will use in this workshop represents a small subset from a larger study that covered the geograpihc and ecologcal range of the species (https://www.biorxiv.org/content/10.1101/2022.06.07.495159v1). Our data is in BAM format (i.e. mapped sequencing data) and span a ~2MB region from four scaffolds selected at random across the genome. (may want to extract an interesting region for FST/PBS analysis, 15 inds pops. alternatively, consider taking data directly from Simons's data and do FST scans. Oruse selscan on vcf). We will use this data to interogate this species' population structure via principle component analysis (PCA) and admixtre/ancestry analysis.
 
 
-# Programs we will use
+# Workshop - programs we will use
 For this practical, we will be using:
 
 [SAMtools](https://www.htslib.org/)
