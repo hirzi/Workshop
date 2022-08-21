@@ -1,5 +1,26 @@
 # Inferring population structure & demography from low-coverage whole genome sequencing data
 
+  - [Initial preparation](#initial-preparation)
+  - [Workshop data](#workshop-data)
+  - [Programs we will use](#programs-we-will-use)
+  - [Instructions - preparing our Docker containers](#instructions---preparing-our-docker-containers)
+      - [Step 1. Open Docker](#Step-1.-Open-Docker)
+          - [Question](#question)
+      - [2. Alternative approach: Covariance matrix estimation with
+        PCAngsd](#2-alternative-approach-covariance-matrix-estimation-with-pcangsd)
+          - [Question](#question-1)
+      - [Optional: Compare the results to a PCA based on all
+        SNPs](#optional-compare-the-results-to-a-pca-based-on-all-snps)
+          - [Question:](#question-2)
+          - [Question:](#question-3)
+      - [Admixture analysis](#admixture-analysis)
+          - [ngsAdmix](#ngsadmix)
+              - [Question:](#question-4)
+          - [Alternative approach:
+            PCAngsd](#alternative-approach-pcangsd)
+
+<br> <br>
+
 ## Why go low-coverage?
 
 **Experimental design** All scientific lines of inquiry start with a question. From this question, we (the researcher) tries to come up with an experimental design to best address said question. If money and time were no object, we may e.g. plan for an experiment with 10 treatments, 10 replicates per treatment, and 1000 samples per replicate. However, in the real world, the experimental design is not determined purely by how best to address the biological question at hand, but also by *cost, time and technical feasibility*.
@@ -56,6 +77,7 @@ The populations and data that we will use in this workshop represents a small su
 
 # Programs we will use
 For this practical, we will be using:
+
 [SAMtools](https://www.htslib.org/)
 
 [ANGSD](http://popgen.dk/wiki/index.php/ANGSD) (Analysis of Next
@@ -66,6 +88,8 @@ Generation Sequencing Data)
 [ngsAdmix](http://www.popgen.dk/software/index.php/NgsAdmix) (think if want to include!)
 
 We will run these programs in Docker containers so there is no need to install these programs locally on your computer.
+
+<br>
 
 # Instructions - preparing our Docker containers
 
@@ -273,7 +297,7 @@ Copy files to/from container (volume) to local filesystem (here we create a temp
 
 # Site frequency spectrum and summary statistics
 
-## For single populations.
+## For single populations
 	for i in $(seq 1 15); do
 		pop=`sed -n ${i}p < pop5inds.list`
 		pop_bamlist='./Population_lists_5inds/'${pop}.5inds
