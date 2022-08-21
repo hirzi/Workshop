@@ -12,7 +12,7 @@
       - [5. Download data](#step-5-download-data)
       - [6. Getting a hand with command-line in Docker](#step-6-getting-a-hand-with-command\-line-in-docker)
       - [7. Index files](#step-7-index-files)
-  - [Principle component analysis (PCA)](#principle-component-analysis-(PCA))
+  - [Principle component analysis (PCA)](#principle-component-analysis (PCA))
   - [Admixture/ancestry analysis](#Admixture-and-ancestry-analysis)
   - [Site frequency spectrum and summary statistics](#site-frequency-spectrum-and-summary-statistics)
       - [For single populations](#for-single-populations)
@@ -207,7 +207,7 @@ Here, we have assigned the reference sequence fasta file to a variable, so that 
 	angsd -GL 2 -out GL_75inds -ref ${REF} -nThreads 4 -doGlf 2 -doMajorMinor 1 -SNP_pval 1e-6 -doMaf 1 -only_proper_pairs 1 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -bam samples_5inds.list -rf scaffolds.list
 
 
-# Step 2. Run PCA via pcangsd. We can first look at PCAngsd's options via:
+## Step 2. Run PCA via pcangsd. We can first look at PCAngsd's options via:
 	
 	pcangsd.py -h
 
