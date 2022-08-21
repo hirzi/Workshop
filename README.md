@@ -185,9 +185,9 @@ To perform PCA, we want to find a rotation and scaling of the data to find new s
 
 <br>
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_admix.gif" width="800"> 
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_admix.gif" width="400"> 
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_pca.png" width="800"> 
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_pca.png" width="400"> 
 
 
 ## Step 1. PCAngsd takes as input genotype likelihoods in beagle format, which we generated in the step before using the `-doGLF 2`option.
