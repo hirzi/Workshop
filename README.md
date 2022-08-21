@@ -19,7 +19,7 @@
       - [For two populations; population genetic differentiation](#for-two-populations\;-population-genetic-differentiation)
       - [For three populations](#for-three-populations)
 
-<br> <br>
+<br>
 
 # Introduction
 
@@ -46,7 +46,8 @@ That said, in the last years (for both cases), there has been notable advances i
 Low-coverage methods also lend themselves well to the sequencing and analysis of ancient DNA, where high-coverage, high-quality DNA sequences may not be attainable.
 
 
-**Summary** - Through working with genotype likelihoods rather than relying on discrete (lossy) genotype calls, low-coverage methods are useful for they allow for the statistical propagation of uncertainty from raw sequencing data to downstream analysis. The effect may be huge for data at low-coverage or minimal for data at high-coverage (where analytical results will tend to converge between low-coverage methods and classical genotype-call based methods). In addition, working directly with genotype likelihoods generally involves fewer (potentially lossy) processing steps, e.g. genotype calling and various filtering.
+### Summary
+Through working with genotype likelihoods rather than relying on discrete (lossy) genotype calls, low-coverage methods are useful for they allow for the statistical propagation of uncertainty from raw sequencing data to downstream analysis. The effect may be huge for data at low-coverage or minimal for data at high-coverage (where analytical results will tend to converge between low-coverage methods and classical genotype-call based methods). In addition, working directly with genotype likelihoods generally involves fewer (potentially lossy) processing steps, e.g. genotype calling and various filtering.
 
 <br>
 
