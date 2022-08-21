@@ -12,8 +12,8 @@
       - [5. Download data](#step-5-download-data)
       - [6. Getting a hand with command-line in Docker](#step-6-getting-a-hand-with-command\-line-in-docker)
       - [7. Index files](#step-7-index-files)
-  - [Principle component analysis (PCA)](#principle-component-analysis (PCA))
-  - [Admixture/ancestry analysis](#Admixture-and-ancestry-analysis)
+  - [Principle component analysis (PCA)](#principle-component-analysis)
+  - [Admixture and ancestry analysis](#Admixture-and-ancestry-analysis)
   - [Site frequency spectrum and summary statistics](#site-frequency-spectrum-and-summary-statistics)
       - [For single populations](#for-single-populations)
       - [For two populations; population genetic differentiation](#for-two-populations\;-population-genetic-differentiation)
@@ -173,7 +173,7 @@ Index all the BAM files (here we'll do this in a for loop):
 
 
 
-# Principle component analysis (PCA)
+# Principle component analysis
 
 What is principle component analysis (PCA)? PCA is a method that reduces the dimensionality of a dataset to emphasize variation and bring out strong (and more easily) interpretable) patterns in a dataset. It does this by transforming a large set of (potentially correlated) variables into a smaller set of uncorrelated variables while minimising information loss.
 
@@ -218,13 +218,13 @@ And then perform the PCA (adjusting the number of threads accordingly)
 	pcangsd.py -beagle ${prefix}.beagle.gz -threads 2 -o ${prefix}.pcangsd
 
 
-# We can then plot the resutls (PC1 vs PC2) in R as follows (don't forget to upload pop metadata files for PCA, admixture, FST to your github!);
+We can then plot the resutls (PC1 vs PC2) in R as follows (don't forget to upload pop metadata files for PCA, admixture, FST to your github!);
 	R code
 
 
-# Let's add the plotly PCA results.
+Let's add the plotly PCA results.
 
-# How do we interpet the results (add html results to Github tutorial!). We find three distinct clusters. Let's add map to githubs totorial. How much variance is explained by the first two PCs? Provide links/references on how to interpret/not interpret PCA results
+How do we interpet the results (add html results to Github tutorial!). We find three distinct clusters. Let's add map to githubs totorial. How much variance is explained by the first two PCs? Provide links/references on how to interpret/not interpret PCA results
 
 # Admixture and ancestry analysis
 
@@ -330,13 +330,13 @@ Copy files to/from container (volume) to local filesystem (here we create a temp
 		realSFS fst stats2 ${output_dir}/${1}.${2}.stats.fst.idx -win 50000 -step 10000 > slidingwindow
 	done
 
-## 3 populations, PBS, 3D-SFS, input for dadi/moments
-# Select 3 populations, i.e. one population each from each lineage. Code is similar to that above for FST (see ANGSD and low-cov tutorial website)
+## 3 populations, PBS, 3D-SFS, input for dadi/moments/momi2
+Select 3 populations, i.e. one population each from each lineage. Code is similar to that above for FST (see ANGSD and low-cov tutorial website)
 	realSFS fst index pop1.saf.idx pop2.saf.idx pop3.saf.idx -sfs pop1.pop2.ml -sfs pop1.pop3.ml -sfs pop2.pop3.ml -fstout out.pbs -whichFst 1
 
-# Note that calling e.g. -n 4 and -P 16 allows better CPU usage as it allows for hyperthreading
+Note that calling e.g. -n 4 and -P 16 allows better CPU usage as it allows for hyperthreading
 	realSFS ${input_dir}/${1}.saf.idx ${input_dir}/${2}.saf.idx ${input_dir}/${3}.saf.idx -P 8 > ${output_dir}/${1}.${2}.${3}.sfs
 
-## optional: dadi
-## optional: selscan (requires vcfs)
+# optional: dadi
+# optional: selscan (requires vcfs)
 
