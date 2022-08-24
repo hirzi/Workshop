@@ -370,3 +370,7 @@ Similar to above, the 3D-SFS can be used infer the demography of the population 
 <br>
 
 ===================================================================
+
+You have now learnt how to infer population structure (including admixture), estimate various diversity metrics and perform tests for selection on low-coverage WGS data - well done! :-)
+
+<br>
