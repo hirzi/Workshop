@@ -91,8 +91,6 @@ Generation Sequencing Data)
 
 [PCAngsd](http://www.popgen.dk/software/index.php/PCAngsd)
 
-[ngsAdmix](http://www.popgen.dk/software/index.php/NgsAdmix) (think if want to include!)
-
 We will run these programs in Docker containers so there is no need to install these programs locally on your computer.
 
 <br>
@@ -178,7 +176,6 @@ Index all the BAM files (here we'll do this in a for loop):
 
 <br>
 
-
 # Principle component analysis
 
 Principle component analysis (PCA) is a method that reduces the dimensionality of a dataset to emphasize variation and thus bring out strong (and more easily) interpretable patterns in a dataset. It does so by transforming a large set of (potentially correlated) variables into a smaller set of uncorrelated variables while minimising information loss.
@@ -242,8 +239,6 @@ Here, the PCA is relatively straightforward to interpret, however, in many cases
 
 # Admixture and ancestry analysis
 
-# Add refs everywhere!
-
 Another way to investigate population structure is by looking at admixture (or ancestry) proportions in populations. This can be achieved through a model-based clustering method where we assume ***K*** populations (***K*** may be unknown), each of which is characterised by a set of allele frequencies. Individuals are then assigned probabilistically to 1 - ***K*** populations (where assignment to > 1 population indicates population admixture). Here, we will use a genotype likelihood implementation of admixture inference using PCAngsd. 
 
 
@@ -269,11 +264,9 @@ Copy files to/from container (volume) to local filesystem (here we create a temp
 
 Let's add the plotly/interactive admixture results (embed html)!
 
-Similar to our PCA analysis, we find three distinct clusters, with minimal admixture between clusters. It is important to note that inferences of admixture can easily be misinterpreted, e.g. if the dataset cannot biologically be delimited into discrete K populations (as in the case of continous geographic clines), if the dataset is imbalanced (with regard to sample sizes of each cluster), or under complex demography (e.g. [(bottleneck)] (https://www.nature.com/articles/s41467-018-05257-7)).
+Similar to our PCA analysis, we find three distinct clusters, with minimal admixture between clusters. 
 
-[(Puechmaille 2016)] (https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12512)
-[(Gilbert 2016)] (https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12521)
-[(Meirmans 2015)] (https://onlinelibrary.wiley.com/doi/10.1111/mec.13243)
+Note: while here the results are relatively clear, it is important to note that inferences of admixture can easily be misinterpreted, e.g. if the dataset cannot biologically be delimited into discrete ***K*** populations (as in the case of a continous geographic cline), [(if the dataset is imbalanced)] (https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12512) (with regard to sample sizes of each cluster), or under complex demography (e.g. [(recent bottleneck)] (https://www.nature.com/articles/s41467-018-05257-7)).
 
 # Site frequency spectrum and summary statistics
 
