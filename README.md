@@ -15,7 +15,7 @@
   - [Principle component analysis (PCA)](#principle-component-analysis)
   - [Admixture and ancestry analysis](#Admixture-and-ancestry-analysis)
   - [Site frequency spectrum and summary statistics](#site-frequency-spectrum-and-summary-statistics)
-      - [Single populations](#single-populations)
+      - [Single population](#single-population)
       - [Two populations](#two-populations)
       - [Three populations](#three-populations)
 
@@ -291,7 +291,7 @@ Because of this information held in the SFS, many diversity statistics (e.g. nuc
 
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/sfs_selection.png" width="650">
 
-## Single populations
+## Single population
 
 Here, we will ANGSD to calculate the SFS for single populations, from which we will estimate various thetas and neutrality statistics.
 
