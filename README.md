@@ -15,7 +15,7 @@
   - [Principle component analysis (PCA)](#principle-component-analysis)
   - [Admixture and ancestry analysis](#Admixture-and-ancestry-analysis)
   - [Site frequency spectrum and summary statistics](#site-frequency-spectrum-and-summary-statistics)
-      - [Single population](#single-population)
+      - [One population](#one-population)
       - [Two populations](#two-populations)
       - [Three populations](#three-populations)
 
@@ -237,6 +237,8 @@ We find three distinct clusters. How much variance is explained by the first two
 
 Here, the PCA is relatively straightforward to interpret, however, in many cases, geographic clines, admixture, bottlenecks and complex demography in general can make interpretations of PCA more difficult to interpret. The following papers provide some good pointers on how to deduce more complex patterns from PCA: [(Novembre & Stephens 2008)] (https://www.nature.com/articles/ng.139), [(François et al. 2010)] (https://academic.oup.com/mbe/article/27/6/1257/1109324), and [(Gompert & Buerkle 2016)] (https://onlinelibrary.wiley.com/doi/full/10.1111/eva.12380)
 
+<br>
+
 # Admixture and ancestry analysis
 
 Another way to investigate population structure is by looking at admixture (or ancestry) proportions in populations. This can be achieved through a model-based clustering method where we assume ***K*** populations (***K*** may be unknown), each of which is characterised by a set of allele frequencies. Individuals are then assigned probabilistically to 1 - ***K*** populations (where assignment to > 1 population indicates population admixture). Here, we will use a genotype likelihood implementation of admixture inference using PCAngsd. 
@@ -268,6 +270,8 @@ Similar to our PCA analysis, we find three distinct clusters, with minimal admix
 
 Note: while here the results are relatively clear, it is important to note that inferences of admixture can easily be misinterpreted, e.g. if the dataset cannot biologically be delimited into discrete ***K*** populations (as in the case of a continous geographic cline), [(if the dataset is imbalanced)] (https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12512) (with regard to sample sizes of each cluster), or under complex demography (e.g. [(recent bottleneck)] (https://www.nature.com/articles/s41467-018-05257-7)).
 
+<br>
+
 # Site frequency spectrum and summary statistics
 
 To interogate the genealogy of a set of samples, population geneticists typically rely on summary statistics that contain information of the underlying genealogical tree of the data.  Among the most informative (and commonly used) statistics for this is the site-frequency spectrum (SFS). To consider the relation between genealogy (which is not directly observable) and the SFS, consider a genealogical tree.
@@ -292,7 +296,7 @@ Because of this information held in the SFS, many diversity statistics (e.g. nuc
 
 (*from Nielsen 2005*)
 
-## Single population
+## One population
 
 Here, we will ANGSD to calculate the SFS for single populations, from which we will estimate various thetas and neutrality statistics.
 
