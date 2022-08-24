@@ -235,7 +235,7 @@ How do we interpet the results?
 
 We find three distinct clusters. How much variance is explained by the first two principle components (PCs)? 
 
-Here, the PCA is relatively straightforward to interpret, however, in many cases, geographic clines, admixture, bottlenecks and complex demography in general can make interpretations of PCA more difficult to interpret. The following papers provide some good pointers on how to deduce more complex patterns from PCA: [(Novembre & Stephens 2008)] (https://www.nature.com/articles/ng.139), [(François et al. 2010)] (https://academic.oup.com/mbe/article/27/6/1257/1109324), and [(Gompert & Buerkle 2016)] (https://onlinelibrary.wiley.com/doi/full/10.1111/eva.12380)
+Here, the PCA is relatively straightforward to interpret, however, in many cases, geographic clines, admixture, bottlenecks and complex demography in general can make interpretations of PCA more difficult to interpret. The following papers provide some good pointers on how to deduce more complex patterns from PCA: [(Novembre & Stephens 2008)](https://www.nature.com/articles/ng.139), [(François et al. 2010)](https://academic.oup.com/mbe/article/27/6/1257/1109324), and [(Gompert & Buerkle 2016)](https://onlinelibrary.wiley.com/doi/full/10.1111/eva.12380)
 
 <br>
 
@@ -264,11 +264,11 @@ Copy files to/from container (volume) to local filesystem (here we create a temp
 
 ## Step 3\. Plot admixture results
 
-Let's add the plotly/interactive admixture results (embed html)!
+Let's add the plotly/interactive admixture results (embed html or shiny app)!
 
 Similar to our PCA analysis, we find three distinct clusters, with minimal admixture between clusters. 
 
-Note: while here the results are relatively clear, it is important to note that inferences of admixture can easily be misinterpreted, e.g. if the dataset cannot biologically be delimited into discrete ***K*** populations (as in the case of a continous geographic cline), [(if the dataset is imbalanced)] (https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12512) (with regard to sample sizes of each cluster), or under complex demography (e.g. [(recent bottleneck)] (https://www.nature.com/articles/s41467-018-05257-7)).
+Note: while here the results are relatively clear, it is important to note that inferences of admixture can easily be misinterpreted, e.g. if the dataset cannot biologically be delimited into discrete ***K*** populations (as in the case of a continous geographic cline), [(if the dataset is imbalanced)](https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12512) (with regard to sample sizes of each cluster), or under complex demography (e.g. [(recent bottleneck)](https://www.nature.com/articles/s41467-018-05257-7)).
 
 <br>
 
@@ -288,7 +288,7 @@ Mutations can occur anywhere on the genealogical tree, and we can assume they ap
 
 From the above two figures, we can see that different demographic processes, e.g. constant size, expansion and decline, are expected to effect the genealogy, and hence the SFS, of a population in particular ways. These expectations can be directly derived from coalecent theory (covered in the workshop yesterday, see Wakely's 2009 book "Coalescent theory" for a good overview).
 
-Because of this information held in the SFS, many diversity statistics (e.g. nucleotide diversity, Watterson's theta) and neutrality statistics (e.g. Tajima's D, Fay & Wu's H, Zeng's E) are based on functions (statistical summaries) of the SFS. These summary statistics are relatively easy to compute (easily calculated from the SFS and do not require phasing of genotypes into haplotypes) and can be quite effective in detecting selection on intermediate to long evolutionary timescales. It is important to note that because both selection and demography can affect genealogies (and hence the SFS) in similar ways, their signals can sometimes be confounded. For more recent selection, haplotype-based selection inference methods (such as those based on extended haplotye homozygosity (EHH) and derivatives, see [(selscan)] (https://github.com/szpiech/selscan) for a modern implementation) are more appropriate.
+Because of this information held in the SFS, many diversity statistics (e.g. nucleotide diversity, Watterson's theta) and neutrality statistics (e.g. Tajima's D, Fay & Wu's H, Zeng's E) are based on functions (statistical summaries) of the SFS. These summary statistics are relatively easy to compute (easily calculated from the SFS and do not require phasing of genotypes into haplotypes) and can be quite effective in detecting selection on intermediate to long evolutionary timescales. It is important to note that because both selection and demography can affect genealogies (and hence the SFS) in similar ways, their signals can sometimes be confounded. For more recent selection, haplotype-based selection inference methods (such as those based on extended haplotye homozygosity (EHH) and derivatives, see [selscan](https://github.com/szpiech/selscan) for a modern implementation) are more appropriate.
 
 <br>
 
@@ -315,7 +315,7 @@ Here, we will ANGSD to calculate the SFS for single populations, from which we w
 		thetaStat do_stat ${OUT}/${pop}.thetas.idx
 	done
 
-Let's have a look at the results. For detecting genetic loci under selection, we can plot the various thetas and neutrality statistics along a sliding window to find loci whose statistics are distinct to that of the rest of the genome (for help with interpreting some the output neutrality statistics, refer to [(here)] (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1667063) and [(here)] (https://academic.oup.com/genetics/article/207/1/229/5930677)). This typically requires generating a null distribution for the summary statistic (either from the empirical distribution or simulated under an appropriate demographic model) to obtain a measure of statistical significance. We can also use the SFS to more explicitly infer the demography of the population, e.g. by leveraging the expected waiting times between coalescent events to assess the variation over time in the effective population size affects e.g. via a method like [(stairway plot)] (https://github.com/xiaoming-liu/stairway-plot-v2), or by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [(dadi)] (https://bitbucket.org/gutenkunstlab/dadi/src/master), [(moments)] (https://bitbucket.org/simongravel/moments/src/main), [(momi)] (https://github.com/popgenmethods/momi2), [(fastsimcoal)] (http://cmpg.unibe.ch/software/fastsimcoal27)). 
+Let's have a look at the results. For detecting genetic loci under selection, we can plot the various thetas and neutrality statistics along a sliding window to find loci whose statistics are distinct to that of the rest of the genome (for help with interpreting some the output neutrality statistics, refer to [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1667063) and [here](https://academic.oup.com/genetics/article/207/1/229/5930677)). This typically requires generating a null distribution for the summary statistic (either from the empirical distribution or simulated under an appropriate demographic model) to obtain a measure of statistical significance. We can also use the SFS to more explicitly infer the demography of the population, e.g. by leveraging the expected waiting times between coalescent events to assess the variation over time in the effective population size affects e.g. via a method like [stairway plot](https://github.com/xiaoming-liu/stairway-plot-v2), or by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master), [moments](https://bitbucket.org/simongravel/moments/src/main), [momi](https://github.com/popgenmethods/momi2), [fastsimcoal](http://cmpg.unibe.ch/software/fastsimcoal27)). 
 
 
 ## Two populations
@@ -346,7 +346,7 @@ We can then calculate the ***FST*** for each population pair by looping over eac
 
 Let's have a look at the ***FST*** results. Which population pairs are genetically closest to each other? Which are furthest apart? You can use the included plotting script (xxx.R) to plot a heatmap of the ***FST*** results (PREPARE R PLOTTING SCRIPT FOR FST, EMBED THE RESULTS HERE!!). A common way to detect selection leveraging population pairs is to calculate ***FST*** in a sliding window across the genome to find loci whose ***FST*** is significantly higher (indicative of positive selection in one population but not the other) or lower (potentially indicative of balancing selection) than the genome-wide average. As in the case of single-population outlier stastitcs, this typically requires generating a null distribution for ***FST*** to obtain a measure of statistical significance.
 
-In addition to using the 2D SFS as a prior to calculate ***FST***, we can use it directly to infer the demography of the population pair, by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [(dadi)] (https://bitbucket.org/gutenkunstlab/dadi/src/master), [(moments)] (https://bitbucket.org/simongravel/moments/src/main), [(momi)] (https://github.com/popgenmethods/momi2), [(fastsimcoal)] (http://cmpg.unibe.ch/software/fastsimcoal27)). Here, migration rates and time of population divergence, in addition to effective population sizes, are the typical demographic parameters of interest.
+In addition to using the 2D SFS as a prior to calculate ***FST***, we can use it directly to infer the demography of the population pair, by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master), [moments](https://bitbucket.org/simongravel/moments/src/main), [momi](https://github.com/popgenmethods/momi2), [fastsimcoal](http://cmpg.unibe.ch/software/fastsimcoal27)). Here, migration rates and time of population divergence, in addition to effective population sizes, are the typical demographic parameters of interest.
 
 
 ## Three populations
@@ -365,7 +365,7 @@ Separately, we can calculate the three population (3D) SFS as follows (note that
 
 	realSFS ${input_dir}/${1}.saf.idx ${input_dir}/${2}.saf.idx ${input_dir}/${3}.saf.idx -P 8 > ${output_dir}/${1}.${2}.${3}.sfs
 
-Similar to above, the 3D-SFS can be used infer the demography of the population trio, by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [(dadi)] (https://bitbucket.org/gutenkunstlab/dadi/src/master), [(moments)] (https://bitbucket.org/simongravel/moments/src/main), [(momi)] (https://github.com/popgenmethods/momi2), [(fastsimcoal)] (http://cmpg.unibe.ch/software/fastsimcoal27)).
+Similar to above, the 3D-SFS can be used infer the demography of the population trio, by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master), [moments](https://bitbucket.org/simongravel/moments/src/main), [momi](https://github.com/popgenmethods/momi2), [fastsimcoal](http://cmpg.unibe.ch/software/fastsimcoal27)).
 
 <br>
 
