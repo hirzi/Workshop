@@ -15,9 +15,9 @@
   - [Principle component analysis (PCA)](#principle-component-analysis)
   - [Admixture and ancestry analysis](#Admixture-and-ancestry-analysis)
   - [Site frequency spectrum and summary statistics](#site-frequency-spectrum-and-summary-statistics)
-      - [For single populations](#for-single-populations)
-      - [For two populations; population genetic differentiation](#for-two-populations\;-population-genetic-differentiation)
-      - [For three populations](#for-three-populations)
+      - [Single populations](#single-populations)
+      - [Two populations](#two-populations)
+      - [Three populations](#three-populations)
 
 <br>
 
