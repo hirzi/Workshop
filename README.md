@@ -47,7 +47,7 @@ Low-coverage methods also lend themselves well to the sequencing and analysis of
 
 
 ### Summary
-Through working with genotype likelihoods rather than relying on discrete (lossy) genotype calls, low-coverage methods are useful for they allow for the statistical propagation of uncertainty from raw sequencing data to downstream analysis. The effect may be huge for data at low-coverage or minimal for data at high-coverage (where analytical results will tend to converge between low-coverage methods and classical genotype-call based methods). In addition, working directly with genotype likelihoods generally involves fewer (potentially lossy) processing steps, e.g. genotype calling and various filtering.
+Through working with genotype likelihoods rather than relying on discrete (lossy) genotype calls, low-coverage methods are useful for they allow for the statistical propagation of uncertainty from raw sequencing data to downstream analysis. The effect may be huge for data at low-coverage or minimal for data at high-coverage (where analytical results will tend to converge between low-coverage methods and classical genotype-call based methods). In addition, working directly with genotype likelihoods generally involve fewer (potentially lossy) processing steps, e.g. genotype calling and various filtering.
 
 <br>
 
@@ -67,13 +67,15 @@ Docker is an open source container based technology that runs in an isolated, se
 Instructions for intalling Docker can be found [here](https://www.docker.com/get-started/), with OS-specific information (including minimum system requirements) and download links for [Windows](https://docs.docker.com/desktop/install/windows-install/), [Mac](https://docs.docker.com/desktop/install/mac-install/) and [Linux](https://docs.docker.com/desktop/linux/).
 
 ## Step 2. Make sure you are familiar with the basics of bash shell scripting
-We will be working almost exclusively through the command-line in docker, so if you have not used shell scripting before or are getting rusty with it, it may be helpful to have a look at a tutorial like [this](https://linuxconfig.org/bash-scripting-tutorial-for-beginners) or a cheat sheet like [this](https://bioinformaticsworkbook.org/Appendix/Unix/UnixCheatSheet.html#gsc.tab=0) before proceeding with this workshop.
+We will be working almost exclusively through the command-line in docker, so if you have not used shell scripting before or are a little rusty with it, it may be helpful to have a look at a tutorial like [this](https://linuxconfig.org/bash-scripting-tutorial-for-beginners) or a cheat sheet like [this](https://bioinformaticsworkbook.org/Appendix/Unix/UnixCheatSheet.html#gsc.tab=0) before proceeding with this workshop.
 
 <br>
 
 # Workshop - data
 
 We will be working with low-coverage whole-genome sequencing (WGS) data (average 2x) of a plant species *Dianthus sylvetris* (Wood pink). This is a perennial plant species that grows throughout the mountain ranges of Europe (e.g. Alps, Apennines & Dinarides). Given the European mountain ranges experienced repeated bouts expansion and recession of glacial ice sheets during the last ca. 2 million years (the Quaternary glaciations or "ice ages"), this species likely experienced a complex and dynamic demographic history. Additionally, this species inhabits a large elevational range (0 - 2500 meters), with the consequence that contemporary populations exhibit a remarkable degree of local adaptation in phenotypic and life history traits. Thee genetic bases of these observed adaptations, however, remain unknown.
+
+Add map!
 
 The populations and data that we will use in this workshop represents a small subset from a larger study that covered the geographic and ecological range of the species (https://www.biorxiv.org/content/10.1101/2022.06.07.495159v1). Our data is in BAM format (i.e. mapped sequencing data) and span a ~2MB region from four scaffolds selected at random across the genome. (may want to extract an interesting region for FST/PBS analysis, 15 inds pops. alternatively, consider taking data directly from Simons's data and do FST scans. Oruse selscan on vcf). We will use this data to interogate this species' population structure via principle component analysis (PCA) and admixtre/ancestry analysis.
 
@@ -196,7 +198,7 @@ To perform PCA, we want to find a rotation and scaling of the data to find new s
 
 ## Step 1\. PCAngsd input
 
-Here, we first assign the reference sequence fasta file to a variable, so that it is easy to refer to in the next steps (we can expand a variable *i* via ${*i*).
+Here, we first assign the reference sequence fasta file to a variable, so that it is easy to refer to in the next steps (we can expand a variable *i* via ${*i*}.
 
 	REF=/data/Workshop/Data/assembly_homozygous.fa
 
@@ -228,69 +230,86 @@ Copy files to/from container (volume) to local filesystem (here we create a temp
 	docker cp temp:/data/Workshop/Data/GL_95inds.pcangsd.cov ./Desktop/Test/
 	#remove/detach docker contained after copying
 
-## Step 4\. Plot PCA results - Let's add the plotly PCA results (embed html)!
+## Step 4\. Plot PCA results
 
-How do we interpet the results (add html results to Github tutorial!). We find three distinct clusters. Let's add map to githubs totorial. How much variance is explained by the first two PCs? Provide links/references on how to interpret/not interpret PCA results. While PCA plots can sometimes be relatively straightforward to interpret (as here), 
+Let's add the plotly PCA results (embed html)!  Let's add map to githubs totorial.
 
-[(Gompert & Buerkle 2016)] (https://onlinelibrary.wiley.com/doi/full/10.1111/eva.12380)
-[(Novembre & Stephens 2008)] (https://www.nature.com/articles/ng.139)
-[(François et al. 2010)] (https://academic.oup.com/mbe/article/27/6/1257/1109324)
+How do we interpet the results?
+
+We find three distinct clusters. How much variance is explained by the first two principle components (PCs)? 
+
+Here, the PCA is relatively straightforward to interpret, however, in many cases, geographic clines, admixture, bottlenecks and complex demography in general can make interpretations of PCA more difficult to interpret. The following papers provide some good pointers on how to deduce more complex patterns from PCA: [(Novembre & Stephens 2008)] (https://www.nature.com/articles/ng.139), [(François et al. 2010)] (https://academic.oup.com/mbe/article/27/6/1257/1109324), and [(Gompert & Buerkle 2016)] (https://onlinelibrary.wiley.com/doi/full/10.1111/eva.12380)
 
 # Admixture and ancestry analysis
 
-In some cases we also want to infer genome-wide admixture proportions for each individuals. Similar to PCA, there are different ways of inferring admixture proportions from genotype likelihoods. Here, we will use [ngsAdmix](http://www.popgen.dk/software/index.php/NgsAdmix) and will also present a way of inferring admixture proportions with PCAngsd. Similar to the PCA, we want to use an LD-pruned SNP dataset for this analysis to reduce the impact of non-independent SNPs on the ancestry inference.
+# Add refs everywhere!
 
-ngsAdmix uses a genotype likelihood file in beagle format (same as for PCAngsd) as input, which is specified using the `-likes` option. In addition, there are a range of parameters that can be adjusted. Here we only set the number of ancestry clusters using the `-K` option to K=2. In reality, it is advisable to compare different numbers of ancestry clusters by iterating over different values of K.
+Another way to investigate population structure is by looking at admixture (or ancestry) proportions in populations. This can be achieved through a model-based clustering method where we assume ***K*** populations (***K*** may be unknown), each of which is characterised by a set of allele frequencies. Individuals are then assigned probabilistically to 1 - ***K*** populations (where assignment to > 1 population indicates population admixture). Here, we will use a genotype likelihood implementation of admixture inference using PCAngsd. 
 
-In case the analysis is not converging, one can also increase the maximum number of EM iterations using the `-maxiter` option.
 
-ngsAdmix produces three different outputs files:
+## Step 1\. Infer admixture proportions via PCAngsd. 
 
-  - A run log containing the log likelihood of the admixture estimates:`.log file`
-  - A file containing the allele frequencies of all ancestral populations (in this case two ancestral clusters): `.fopt file`
-  - A file containing the admixture proportions for each individual:`.qopt file`
-
-We are mostly interested in the admixture proportions and the log likelihood of the estimates. The log likelihoods can be compared between runs with different values of K to select the most likely number of ancestral clusters (However, this should always be interpreted in a biologically meaningful context)
-
-In addition to ngsAdmix, PCAngsd can also be used to infer admixture proportions. The command is similar to the one used for the PCA with the addition of to a `-admix` option. The input file for ngsAdmix and PCAngsd is the same, making comparisons relatively easy.
-
-Other than ngsAdmix, PCAngsd can automatically infer the most likely number of ancestry cluster. However, one can also set the number of clusters using the `-admix_K` option.
-
-Here, we have PCangsd output individual admixture proportions (-admix), and also output population specific allele frequencies (-admix_save). We iterate over K (here via the -e argument which defines the number of eigenvalues, rather than via -admix _K as the latter is not recommended).
-
-To estimate admixture proportions in PCangsd, you need to define an alpha parameter (sparseness regularisation parameter). This can be specified manually (-admix_alpha) or automatically searching for the optimal alpha (-admix_auto), specifiying only a soft upper bound.
+Similar to before, PCAngsd takes as input genotype likelihoods in beagle format, which we generated before in the previous section. To estimate admixture proportions in PCangsd, we add the -admix argument. When inferring admixture, it is always advisable to do so over different values of ***K***, so we will iterate the command in a *for* loop. Here, we do so via the -e argument which defines the number of eigenvalues, rather than via -admix_K as the latter is not recommended (ref). We then define an alpha parameter (sparseness regularisation parameter), which can be specified manually (-admix_alpha) or here, automatically via searching for the optimal alpha (-admix_auto), specifying only a soft upper bound.
 
 	for k in $(seq 1 2); do
 		pcangsd.py -beagle ${prefix}.beagle.gz -threads 2 -e ${k} -admix -admix_auto 10000 -o ${prefix}.admix.pcangsd.K$((${k}+1))
 	done
 
-Alternatively, we can use NGSAdmix (slower)
-Remember the LSB_JOBINDEX goes from 1,2,3,....
-To change, add constant to variable e.g. $((${i}+c))
-
-	for k in $(seq 1 2); do
-		NGSadmix -likes ${prefix}.beagle.gz -K $((${k}+1)) -P 2 -o ${prefix}_$((${k}+1))
-	done
+## Step 2\. Copy file to/from the Docker container (volume) to local computer. Alternatively, let's write R script and upload on Github repo. Then easy to run as Rscript, output as html. Then copy to local computer.
 
 Either write R code, or upload R code on Github repo to allow easy execution of Rscript in Docker
 
 Copy files to/from container (volume) to local filesystem (here we create a temporary container (named temp) with our named volume mounted)
 
 	docker run --name temp --mount source=myvol3,target=/data -w /data ubuntu
-	docker cp ./Desktop/Test/samples_5inds.list temp:/data/Workshop/Data/
-	docker cp temp:/data/Workshop/Data/GL_95inds.pcangsd.cov ./Desktop/Test/
 	docker cp temp:/data/Workshop/Data/admix_results ./Desktop/Test/
 	#remove/detach docker contained after copying
 
+## Step 3\. Plot admixture results
+
+Let's add the plotly/interactive admixture results (embed html)!
+
+Similar to our PCA analysis, we find three distinct clusters, with minimal admixture between clusters. It is important to note that inferences of admixture can easily be misinterpreted, e.g. if the dataset cannot biologically be delimited into discrete K populations (as in the case of continous geographic clines), if the dataset is imbalanced (with regard to sample sizes of each cluster), or under complex demography (e.g. [(bottleneck)] (https://www.nature.com/articles/s41467-018-05257-7)).
+
 [(Puechmaille 2016)] (https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12512)
 [(Gilbert 2016)] (https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12521)
-[(Lawson et al. 2018)] (https://www.nature.com/articles/s41467-018-05257-7)
-
+[(Meirmans 2015)] https://onlinelibrary.wiley.com/doi/10.1111/mec.13243
 
 # Site frequency spectrum and summary statistics
 
+To interogate the genealogy of a set of samples, population geneticists typically rely on summary statistics that contain information of the underlying genealogical tree of the data.  Among the most informative (and commonly used) statistics for this is the site-frequency spectrum (SFS). The SFS is simply the distribution of allele frequencies of a set of SNPs in a population or sample.  
+
+Pic
+
+Different demographic processes, e.g. population size change, growth/bottlenecks, selection are expected to change/effect genealogy, and hence SFS, in particular ways.
+
+Pics
+
+Because of the information held in the SFS, many summary stastics (thetas and neutrality statistics, e.g. xxx) are based on functions of the SFS. [statistical
+summaries of the SFS]
+
+
+These summary statistics are relatively easy to compute (easily calculated from the SFS and do not require phasing of genotypes into haplotypes) and are generally effective in detecting selection on intermediate to long evolutionary timescales. However, they have several disadvantages: they can confound selection with nonequilibrium model conditions such as changes in population size; they do not directly translate into estimates of selection coefficients; and they generally require direct characterization of a null distribution for the summary statistic to obtain a measure of statistical significance. SFS-based summary statistics also do not directly account for haplotype structure, which can be a powerful indicator of selection.
+
+The SFS is a function of both tree structure andmutational process. For a given mutational process, the SFS carries information on the underlying, but not directly observable, genealogical trees and therefore on the forward process that has generated the trees. For a nonrecombining locus, the SFS carries information on the realized coalescent tree and can be used to estimate tree structure (both waiting times and topology).
+
+The spectrum is a key quantity when applying coalescent theory in inference; see, e.g., Wakeley (2007) for an overview and a discussion of the relation of the SFS with various other (simpler) summary statistics. The statistical properties of the SFS under the Kingman coalescent have been investigated in several studies
+
+Variation over time in the effective population size affects the expected waiting times between coalescent events. In the past, much attention in theoretical works has been paid to the relation between waiting times and population size variation. For example, skyline plots (Pybus et al. 2000) are directly used to infer variation of population size (Ho and Shapiro 2011), although care should be taken while using this approach (Lapierre et al. 2016). More generally, formulas of the SFS can be generalized to include deterministic changes of population size (Griffiths and Tavaré 1998; Zivkovic and Wiehe 2008; Liu and Fu 2015).
+
+Here, we will ANGSD to first calculate the SFS for single populations, from which we will estimate various thetas and neutarlity statistics (e.g. TajD)
+
+
+Write stuff
+> intro the relation/expectations between SFS, genealogical trees, and sumstats, as they relate to different demographies (with pics)
+> thus, we can interpret SFS/sumstats to infer past demographries
+
+
+Add pic.
+
 ## For single populations
 Talk about SFS, summary stats, etc. mention e.g. use of stairway plot.
+Add pic of coalesecent geneaology under different demopgraphies, expectation on SFS and sumstat
 
 	for i in $(seq 1 15); do
 		pop=`sed -n ${i}p < pop5inds.list`
@@ -305,6 +324,9 @@ Talk about SFS, summary stats, etc. mention e.g. use of stairway plot.
 		# Estimate Tajimas D and other statistics
 		thetaStat do_stat ${OUT}/${pop}.thetas.idx
 	done
+
+
+Mention uses of 1D SFS, e.g. stairway plot, dadi to find NE changes.
 
 ## For two populations; population genetic differentiation g2 populations, FST, 2D-SFS, input for dadi/moments. PREPARE R PLOTTING SCRIPT FOR FST!
 	# The following requires an input file which lists all pairwise comparisons, e.g. Airolo Bayasse
