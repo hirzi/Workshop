@@ -281,13 +281,13 @@ To interogate the genealogy of a set of samples, population geneticists typicall
 
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/genealogies_demos.png" width="650"> 
 
-Mutations can occur anywhere on the genealogical tree, and we can assume they do so randomly at a relatively fixed rate; hence, mutation events are proportional to branch length. Mutations on terminal (or external) branches are denominated as singletons, since they are unique (private) to one branch (population). Mutations on internal branches are classified e.g. as doubletons, tripletons, etc. depending on how many terminal branches (populations) the mutation is present. A histogram of these frequency classes (singletons, doubletons, tripletons, etc.) then defines the SFS.
+Mutations can occur anywhere on the genealogical tree, and we can assume they appear randomly at a relatively fixed rate; hence, mutation events are proportional to branch length. Mutations on terminal (or external) branches are denominated as singletons, since they are unique (private) to one branch (population). Mutations on internal branches are classified e.g. as doubletons, tripletons, etc. depending on how many terminal branches (populations) the mutation is present. The SFS (of a population) is simply the distribution of these frequency classes (singletons, doubletons, tripletons, etc.) in the population.
 
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/sfs_demos.png" width="650"> 
 
 From the above two figures, we can see that different demographic processes, e.g. constant size, expansion and decline, are expected to effect the genealogy, and hence the SFS, of a population in particular ways. These expectations can be directly derived from coalecent theory (covered in the workshop yesterday, see Wakely's 2009 book "Coalescent theory" for a good overview).
 
-Because of this information held in the SFS, many diversity statistics (e.g. nucleotide diversity, Watterson's theta) and neutrality statistics (e.g. Tajima's D, Fay & Wu's H, Zeng's E) are based on functions (statistical summaries) of the SFS. These summary statistics are relatively easy to compute (easily calculated from the SFS and do not require phasing of genotypes into haplotypes) and can be quite effective in detecting selection on intermediate to long evolutionary timescales (see [(here)] (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1667063) and [(here)] (https://academic.oup.com/genetics/article/207/1/229/5930677) for good references). It is important to note that because both selection and demography can affect genealogies (and hence the SFS) in similar ways, their signals can sometimes be confounded. For more recent selection, haplotype-based selection inference methods (such as those based on extended haplotye homozygosity (EHH) and derivatives, see [(selscan)] (https://github.com/szpiech/selscan) for a modern implementation) are more appropriate.
+Because of this information held in the SFS, many diversity statistics (e.g. nucleotide diversity, Watterson's theta) and neutrality statistics (e.g. Tajima's D, Fay & Wu's H, Zeng's E) are based on functions (statistical summaries) of the SFS. These summary statistics are relatively easy to compute (easily calculated from the SFS and do not require phasing of genotypes into haplotypes) and can be quite effective in detecting selection on intermediate to long evolutionary timescales. It is important to note that because both selection and demography can affect genealogies (and hence the SFS) in similar ways, their signals can sometimes be confounded. For more recent selection, haplotype-based selection inference methods (such as those based on extended haplotye homozygosity (EHH) and derivatives, see [(selscan)] (https://github.com/szpiech/selscan) for a modern implementation) are more appropriate.
 
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/sfs_selection.png" width="650">
 
@@ -296,7 +296,9 @@ Because of this information held in the SFS, many diversity statistics (e.g. nuc
 Here, we will ANGSD to calculate the SFS for single populations, from which we will estimate various thetas and neutrality statistics.
 
 	for i in $(seq 1 15); do
+		# assign population list
 		pop=`sed -n ${i}p < pop5inds.list`
+		# assign individual BAM files that constitute population 
 		pop_bamlist='./Population_lists_5inds/'${pop}.5inds
 		# First, we calculate the site allele frequency likelihoods (SAFs).
 		angsd -b ${pop_bamlist} -doSaf 1 -anc ${REF} -ref ${REF} -GL 2 -P 2 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -only_proper_pairs 1 -doCounts 1 -setMinDepth 10 -setMaxDepth 75 -minInd 3 -out ${OUT}/${pop}
@@ -308,19 +310,21 @@ Here, we will ANGSD to calculate the SFS for single populations, from which we w
 		thetaStat do_stat ${OUT}/${pop}.thetas.idx
 	done
 
-Let's have a look at the results. For detecting genetic loci under selection, we can plot the various thetas and neutrality statistics along a sliding window to find loci whose statistics are distinct to that of the rest of the genome. This typically requires generating a null distribution for the summary statistic (either from the empirical distribution or simulated under an appropriate demographic model) to obtain a measure of statistical significance. We can also use the single population (1D)-SFS to more explicitly interogate the demography of the population, e.g. by leveraging the expected waiting times between coalescent events to assess the variation over time in the effective population size affects e.g. via stairway plot, or by comparing simulated SFS (generated under particular demographic models) against the empirical SFS (e.g. dadi, moments, momi2, fastsimcoal). 
+Let's have a look at the results. For detecting genetic loci under selection, we can plot the various thetas and neutrality statistics along a sliding window to find loci whose statistics are distinct to that of the rest of the genome (for help with interpreting some the output neutrality statistics, refer to [(here)] (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1667063) and [(here)] (https://academic.oup.com/genetics/article/207/1/229/5930677)). This typically requires generating a null distribution for the summary statistic (either from the empirical distribution or simulated under an appropriate demographic model) to obtain a measure of statistical significance. We can also use the SFS to more explicitly infer the demography of the population, e.g. by leveraging the expected waiting times between coalescent events to assess the variation over time in the effective population size affects e.g. via a method like [(stairway plot)] (https://github.com/xiaoming-liu/stairway-plot-v2), or by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [(dadi)] (https://bitbucket.org/gutenkunstlab/dadi/src/master), [(moments)] (https://bitbucket.org/simongravel/moments/src/main), [(momi)] (https://github.com/popgenmethods/momi2), [(fastsimcoal)] (http://cmpg.unibe.ch/software/fastsimcoal27)). 
+
 
 ## Two populations
 
-A common statistic to calculate between pairs of populations is their population genetic differentiation (***FST***). Here, we will use ANGSD to calculate ***FST*** between our population pairs. ANGSD first calculates the two population (2D)-SFS, which it then uses as a prior (joint with the site allele frequency likelihoods of the single populations, calculated in the previous step) to calculate the ***FST***.
+A useful statistic to calculate between pairs of populations is their population genetic differentiation (***FST***). Here, we will use ANGSD to calculate the ***FST*** between our population pairs. To do this, ANGSD first calculates the two population (2D) SFS, which it uses as a prior (together with the site allele frequency likelihoods of the single populations, calculated in the previous step) to calculate the ***FST***.
 
-To calculate ***FST*** between all our population pairs, we will first make a list of all population pairwise comparisons. We do this this with the make_list_pairwise.sh script in the xxx/Data/xxx folder.
+To calculate ***FST*** between all our population pairs, let's first make a list of all population pairs.
 
 	./make_list_pairwise.sh
 
-We can then calculate ***FST***s for each population pair by looping over each line of the pairwise list.
+We can then calculate the ***FST*** for each population pair by looping over each line of the pairwise list.
 
 	for i in $(seq 1 15); do
+		# read in population pairs list
 		pop=`sed -n ${i}p < ${working_dir}/list_pop_name_pairs/pop_name_pairs`
 		# Note, set allows you to define the elements of your list as variables, according to their order
 		set -- $pop
@@ -335,24 +339,28 @@ We can then calculate ***FST***s for each population pair by looping over each l
 		realSFS fst stats2 ${output_dir}/${1}.${2}.stats.fst.idx -win 50000 -step 10000 > slidingwindow
 	done
 
-Let's have a look at the ***FST*** results. Which population pairs are genetically closest to each other? Which are furthest apart? You can use the included plotting script (xxx.R) to plot a heatmap of the ***FST*** results (PREPARE R PLOTTING SCRIPT FOR FST, EMBED THE RESULTS HERE!!). Similar to the 1D-SFS, the 2D-SFS can be used infer the demography of the population pair, by comparing the simulated SFS (generated under particular demographic models) against the empirical SFS (e.g. dadi, moments, momi2, fastsimcoal). Here, additional demographic parameters, such as/namely migration and population divergence,....
+Let's have a look at the ***FST*** results. Which population pairs are genetically closest to each other? Which are furthest apart? You can use the included plotting script (xxx.R) to plot a heatmap of the ***FST*** results (PREPARE R PLOTTING SCRIPT FOR FST, EMBED THE RESULTS HERE!!). A common way to detect selection leveraging population pairs is to calculate ***FST*** in a sliding window across the genome to find loci whose ***FST*** is significantly higher (indicative of positive selection in one population but not the other) or lower (potentially indicative of balancing selection) than the genome-wide average. As in the case of single-population outlier stastitcs, this typically requires generating a null distribution for ***FST*** to obtain a measure of statistical significance.
+
+In addition to using the 2D SFS as a prior to calculate ***FST***, we can use it directly to infer the demography of the population pair, by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [(dadi)] (https://bitbucket.org/gutenkunstlab/dadi/src/master), [(moments)] (https://bitbucket.org/simongravel/moments/src/main), [(momi)] (https://github.com/popgenmethods/momi2), [(fastsimcoal)] (http://cmpg.unibe.ch/software/fastsimcoal27)). Here, migration rates and time of population divergence, in addition to effective population sizes, are the typical demographic parameters of interest.
 
 
 ## Three populations
 
-For three populations, we can consider the population branch statistic (***PBS***). We can use ANGSD to calculate the PBS via a similar command to that for ***FST*** (Select 3 populations, i.e. one population each from each lineage. Code is similar to that above for FST (see ANGSD and low-cov tutorial website)_
+When we have three populations, we can measure the branch lengths between the three populations (employing one as an outgroup) to detect extreme allele frequency change (in a locus) in one population (relative to the other). This statistic, called the population branch statistic (***PBS***) thus represents another way to infer selection. 
+
+We can use ANGSD to calculate the PBS via extending the previous command to run ***FST*** to three populations.(Select 3 populations, i.e. one population each from each lineage. Code is similar to that above for FST (see ANGSD and low-cov tutorial website)_
 
 	realSFS fst index pop1.saf.idx pop2.saf.idx pop3.saf.idx -sfs pop1.pop2.ml -sfs pop1.pop3.ml -sfs pop2.pop3.ml -fstout out.pbs -whichFst 1
 
-Separately, we can calculate the three population (3D)-SFS in ANGSD as follows (not that joint SFS for >3 populations can be very slow):
+Let's have a look at the results.
+
+	realSFS fst print pop1.pbs.fst.idx | less -S
+
+Separately, we can calculate the three population (3D) SFS as follows (note that calculating the joint SFS for >/=3 populations can be very slow):
 
 	realSFS ${input_dir}/${1}.saf.idx ${input_dir}/${2}.saf.idx ${input_dir}/${3}.saf.idx -P 8 > ${output_dir}/${1}.${2}.${3}.sfs
 
-, PBS, 3D-SFS, input for dadi/moments/momi2
-
-Let's have a look at the ***PBS*** results. 
-
-Similar to above, the 3D-SFS can be used infer the demography of the population trio, by comparing the simulated SFS (generated under particular demographic models) against the empirical SFS (e.g. dadi, moments, momi2, fastsimcoal).
+Similar to above, the 3D-SFS can be used infer the demography of the population trio, by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [(dadi)] (https://bitbucket.org/gutenkunstlab/dadi/src/master), [(moments)] (https://bitbucket.org/simongravel/moments/src/main), [(momi)] (https://github.com/popgenmethods/momi2), [(fastsimcoal)] (http://cmpg.unibe.ch/software/fastsimcoal27)).
 
 <br>
 
