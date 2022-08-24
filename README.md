@@ -235,7 +235,7 @@ How do we interpet the results?
 
 We find three distinct clusters. How much variance is explained by the first two principle components (PCs)? 
 
-Here, the PCA is relatively straightforward to interpret, however, in many cases, geographic clines, admixture, bottlenecks and complex demography in general can make interpretations of PCA more difficult to interpret. The following papers provide some good pointers on how to deduce more complex patterns from PCA: [(Novembre & Stephens 2008)](https://www.nature.com/articles/ng.139), [(François et al. 2010)](https://academic.oup.com/mbe/article/27/6/1257/1109324), and [(Gompert & Buerkle 2016)](https://onlinelibrary.wiley.com/doi/full/10.1111/eva.12380)
+Here, the PCA is relatively straightforward to interpret, however, in many cases, geographic clines, admixture, bottlenecks and complex demography in general can make interpretations of PCA more difficult to interpret. The following papers provide some good pointers on how to deduce more complex patterns from PCA: [Novembre & Stephens 2008](https://www.nature.com/articles/ng.139), [François et al. 2010](https://academic.oup.com/mbe/article/27/6/1257/1109324), and [Gompert & Buerkle 2016](https://onlinelibrary.wiley.com/doi/full/10.1111/eva.12380)
 
 <br>
 
@@ -268,7 +268,7 @@ Let's add the plotly/interactive admixture results (embed html or shiny app)!
 
 Similar to our PCA analysis, we find three distinct clusters, with minimal admixture between clusters. 
 
-Note: while here the results are relatively clear, it is important to note that inferences of admixture can easily be misinterpreted, e.g. if the dataset cannot biologically be delimited into discrete ***K*** populations (as in the case of a continous geographic cline), [(if the dataset is imbalanced)](https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12512) (with regard to sample sizes of each cluster), or under complex demography (e.g. [(recent bottleneck)](https://www.nature.com/articles/s41467-018-05257-7)).
+Note: while here the results are relatively clear, it is important to note that inferences of admixture can easily be misinterpreted, e.g. if the dataset cannot biologically be delimited into discrete ***K*** populations (as in the case of a continous geographic cline), [if the dataset is imbalanced](https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12512) (with regard to sample sizes of each cluster), or under complex demography (e.g. [recent bottleneck](https://www.nature.com/articles/s41467-018-05257-7)).
 
 <br>
 
