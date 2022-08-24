@@ -279,17 +279,25 @@ Similar to our PCA analysis, we find three distinct clusters, with minimal admix
 
 To interogate the genealogy of a set of samples, population geneticists typically rely on summary statistics that contain information of the underlying genealogical tree of the data.  Among the most informative (and commonly used) statistics for this is the site-frequency spectrum (SFS). To consider the relation between genealogy (which is not directly observable) and the SFS, consider a genealogical tree.
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/genealogies_demos.png" width="650"> 
+<br>
+
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/genealogies_demos.png" width="800"> 
 
 Mutations can occur anywhere on the genealogical tree, and we can assume they appear randomly at a relatively fixed rate; hence, mutation events are proportional to branch length. Mutations on terminal (or external) branches are denominated as singletons, since they are unique (private) to one branch (population). Mutations on internal branches are classified e.g. as doubletons, tripletons, etc. depending on how many terminal branches (populations) the mutation is present. The SFS (of a population) is simply the distribution of these frequency classes (singletons, doubletons, tripletons, etc.) in the population.
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/sfs_demos.png" width="650"> 
+<br>
+
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/sfs_demos.png" width="800"> 
 
 From the above two figures, we can see that different demographic processes, e.g. constant size, expansion and decline, are expected to effect the genealogy, and hence the SFS, of a population in particular ways. These expectations can be directly derived from coalecent theory (covered in the workshop yesterday, see Wakely's 2009 book "Coalescent theory" for a good overview).
 
 Because of this information held in the SFS, many diversity statistics (e.g. nucleotide diversity, Watterson's theta) and neutrality statistics (e.g. Tajima's D, Fay & Wu's H, Zeng's E) are based on functions (statistical summaries) of the SFS. These summary statistics are relatively easy to compute (easily calculated from the SFS and do not require phasing of genotypes into haplotypes) and can be quite effective in detecting selection on intermediate to long evolutionary timescales. It is important to note that because both selection and demography can affect genealogies (and hence the SFS) in similar ways, their signals can sometimes be confounded. For more recent selection, haplotype-based selection inference methods (such as those based on extended haplotye homozygosity (EHH) and derivatives, see [(selscan)] (https://github.com/szpiech/selscan) for a modern implementation) are more appropriate.
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/sfs_selection.png" width="650">
+<br>
+
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/sfs_selection.png" width="800">
+
+(*from Nielsen 2005*)
 
 ## Single population
 
