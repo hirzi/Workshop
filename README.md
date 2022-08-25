@@ -238,7 +238,9 @@ Let's plot the results of the PCA. Let's first copy the output (GL_75inds.pcangs
 
 The output file together with some plotting scripts should now have been downloaded to your Desktop (if not, please check the paths in the code above).
 
-Open Plot_PCA.R in RStudio and run the code. It will be necessary to change the path on line 10 (after "setwd") of the code to the path of your Desktop (or the path where you downloaded to). If you have time, see if you can follow some of the code. 
+Open Plot_PCA.R in RStudio and run the code. It will be necessary to change the path on line 10 (after "setwd") of the code to the path of your Desktop (or the path where you downloaded to). If you have time, see if you can follow some of the code.
+
+<br>
 
 <details>
 
@@ -351,6 +353,8 @@ Let's plot the results from the admixture analysis. Let's first copy the output 
 	docker stop temp
 
 Then, open Plot_admix.R in RStudio (this will be in the same folder as PCA.R used in the previous section). It will be necessary to change the path on line 8 (after "setwd") of the code to the path of your Desktop (or the path where you downloaded to). Run the code for ***K***= 2 and 3 (line 5).
+
+<br>
 
 <details>
 
