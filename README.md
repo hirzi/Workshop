@@ -385,7 +385,7 @@ Then, open Plot_admix.R in RStudio (this will be in the same folder as PCA.R use
 
 	# And plot
 	par(mfrow=c(1,1), mar = c(12, 4, 2, 1))
-	barplot(t(as.matrix(admix_Q_labelled_sorted[,seq(3,2+k)])), col=c("firebrick","royalblue3", "gold"), border=NA, names.arg=admix_Q_labelled_sorted$Ind, las=2, cex.names=0.85)
+	barplot(t(as.matrix(admix_Q_labelled_sorted[,seq(3,2+k)])), col=c("darkseagreen2","orange", "darkred"), border=NA, names.arg=admix_Q_labelled_sorted$Ind, las=2, cex.names=0.85)
 
 </details>
 
@@ -397,9 +397,7 @@ Then, open Plot_admix.R in RStudio (this will be in the same folder as PCA.R use
 
 <br>
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Admixture_result_K2.png" width="800"> 
-
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Admixture_result_K3.png" width="800"> 
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Admixture_result_K3_2.png" width="800"> 
 
 </details>
 
