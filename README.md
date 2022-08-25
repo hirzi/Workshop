@@ -365,7 +365,7 @@ Then, open Plot_admix.R in RStudio (this will be in the same folder as PCA.R use
 	# Import necessary modules
 	library(RcppCNPy)
 
-	# Define input variables
+	# Define number of Ks
 	k <- 3
 
 	# Set working directory (change this to your own) and read in data
