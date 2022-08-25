@@ -229,7 +229,7 @@ We can then plot the results (PC1 vs PC2) in R as follows (don't forget to uploa
 
 ## Step 3\. Plot PCA results
 
-Let's plot the results of the PCA. Let's first copy the output (GL_75inds.pcangsd.cov) from the Docker container (volume) to your local computer (here we create a temporary container (named temp) with our named volume mounted). Let's also some code while we are it.
+Let's plot the results of the PCA. Let's first copy the output (GL_75inds.pcangsd.cov) from the Docker container (volume) to your local computer (here we create a temporary container (named temp) with our named volume mounted). Let's also download the population metada and some plotting code while we are it.
 
 	docker run --name temp --mount source=myvol,target=/data -w /data ubuntu
 	docker cp temp:/data/Workshop/Data/GL_75inds.pcangsd.cov ./Desktop/
@@ -238,7 +238,7 @@ Let's plot the results of the PCA. Let's first copy the output (GL_75inds.pcangs
 
 The output file together with some plotting scripts should now have been downloaded to your Desktop (if not, please check the paths in the code above).
 
-Open PCA.R in RStudio and run the code. It will be necessary to change the path on line 10 of the code to the path of your Desktop (or the path where you downloaded to). If you have time, see if you can follow some of the code. 
+Open Plot_PCA.R in RStudio and run the code. It will be necessary to change the path on line 10 (after "setwd") of the code to the path of your Desktop (or the path where you downloaded to). If you have time, see if you can follow some of the code. 
 
 <details>
 
@@ -282,7 +282,7 @@ Let's plot the results from the admixture analysis. Let's first copy the output 
 	docker cp temp:/data/Workshop/Data/GL_75inds.admix.pcangsd.K3.admix.3.Q ./Desktop/
 	docker stop temp
 
-Then, open Admix.R in RStudio (this will be in the same folder as PCA.R used in the previous section). It will be necessary to change the path on line 8 of the code to the path of your Desktop (or the path where you downloaded to). Run the code for ***K***= 2 and 3 (line 5).
+Then, open Plot_admix.R in RStudio (this will be in the same folder as PCA.R used in the previous section). It will be necessary to change the path on line 8 (after "setwd") of the code to the path of your Desktop (or the path where you downloaded to). Run the code for ***K***= 2 and 3 (line 5).
 
 <details>
 
