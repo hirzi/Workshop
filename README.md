@@ -316,7 +316,7 @@ Open Plot_PCA.R in RStudio and run the code. It will be necessary to change the 
 
 Or sorted exclusively by region:
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/PCA_result1.png" width="600"> 
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/PCA_result1.png" width="615"> 
 
 </details>
 
