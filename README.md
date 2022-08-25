@@ -122,11 +122,12 @@ Let's now "pull" Docker images for the other programs we will be using.
 	docker pull didillysquat/pcangsd
 
 ## Step 4\. Creating and mounting a volume
-We have now "pulled" the necessary programs into Docker. We now need the data. First we'll need to create a volume in Docker to store downloaded and generated data. Here, we will run an Ubuntu container with a named volume via the --mount argument (i.e. we will name this created volume "myvol" and define the associated container path as "/data". The -w allows the command to be executed inside the defined working directory. Before we download data, we will first need to install some other programs within the running container, namely git. 
+We have now "pulled" the necessary programs into Docker. We now need the data. First we'll need to create a volume in Docker to store downloaded and generated data. Here, we will run an Ubuntu container with a named volume via the --mount argument (i.e. we will name this created volume "myvol" and define the associated container path as "/data". The -w allows the command to be executed inside the defined working directory. Before we download data, we will first need to install some other programs within the running container, namely git and wget. 
 
 	docker run --name base --mount source=myvol,target=/data -w /data -it --rm ubuntu
 	apt update
 	apt install git
+	apt-get install wget
 
 While we are at it, let's install a text editor too (vim nano).
 
@@ -156,7 +157,8 @@ Now that we have all the data downloaded, let's try a few bash commands to see w
 How many BAM files (i.e. samples) are there? (hint: ls \*bam | wc -l). In total we have 95 samples (13 populatiosn with 5 individuals each and 2 populations with 15 individuals each).
 
 Now, let's check directory permissions. Do we have permission to write to the /data/Workshop/Data/ directory? You can check this with the command "ls -l". If not, let's change permissions so that you can write to this directory.
-chmod 777 /data/Workshop/Data
+
+	chmod 777 /data/Workshop/Data
 
 ## Step 7\. Index files
 We now have the data stored in a named volume. Even when we close the Docker container, the volume is maintained. We can always re-access the volume by mounting it it when running a new container. Before we perform any analysis with BAM and fasta files (or really any large sequencing file), we need to index them so that programs can parse through them efficiently. To do this, let's open another terminal tab, in which we will run Samtools. Note the named volume that we mount to.
@@ -184,7 +186,7 @@ Have a look [here](https://setosa.io/ev/principal-component-analysis) to intuiti
 
 For NGS data, each variant site (e.g. single nucleotide polymorphism (SNP)) represents one dimesion (or axis) of variation. Thus, if we have 1 million SNPs, we have 1 million dimensions (or axes) of variation. Obviously, this would be extremely difficult to visualise without some sort of transformation applied (we can normally only visualise 2-3 axes at once). Additionally, many SNPs will be highly correlated (linked), meaning that PCA can be highly effective at reducing the dimensionality of the dataset while retaining most of the variance.
 
-To perform PCA, we want to find a rotation and scaling of the data to find new set of orthogonal axes that maximuse variation within the data. We can do this easily on a genotype table, e.g. in R, SNPRelate or other tools, however, recall that for low-coverage data, we potentially have a large uncertainty in genotype calls and consequently in variant calls. The tool that we will use, PCAngsd performs PCA by first estimating individual allele frequencies (in an iterative approach), and then using the estimated individual allele frequencies as prior information for unobserved genotypes (in the data) to estimate a genetic covariance matrix [(Meisner & Albrechtsen 2018)](https://academic.oup.com/genetics/article/210/2/719/5931101).
+To perform PCA, we want to find a rotation and scaling of the data to find new set of orthogonal axes that maximuse variation within the data. We can do this easily on a genotype table, e.g. in R, SNPRelate or other tools, however, recall that for low-coverage data, we potentially have a large uncertainty in genotype calls and consequently in variant calls, in addition to a large amount of missing data. The tool that we will use, PCAngsd performs PCA by first estimating individual allele frequencies (in an iterative approach), and then using the estimated individual allele frequencies as prior information for unobserved genotypes (in the data) to estimate a genetic covariance matrix [(Meisner & Albrechtsen 2018)](https://academic.oup.com/genetics/article/210/2/719/5931101).
 
 <br>
 
@@ -195,47 +197,60 @@ To perform PCA, we want to find a rotation and scaling of the data to find new s
 
 ## Step 1\. PCAngsd input
 
+Let's first open a Docker container in a new tab (running ANGSD):
+
+	docker run --name angsd --mount source=myvol,target=/data -w /data/ -it --rm zjnolen/angsd
+
 Here, we first assign the reference sequence fasta file to a variable, so that it is easy to refer to in the next steps (we can expand a variable *i* via ${*i*}.
 
 	REF=/data/Workshop/Data/assembly_homozygous.fa
+	metadata_dir=/data/Workshop/Metadata
 
 PCAngsd takes as input genotype likelihoods in beagle format, which we generated in the step before using the `-doGLF 2`option.
 
-	angsd -GL 2 -out GL_95inds -ref ${REF} -nThreads 4 -doGlf 2 -doMajorMinor 1 -SNP_pval 1e-6 -doMaf 1 -only_proper_pairs 1 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -bam samples.list -rf scaffolds.list
-	angsd -GL 2 -out GL_75inds -ref ${REF} -nThreads 4 -doGlf 2 -doMajorMinor 1 -SNP_pval 1e-6 -doMaf 1 -only_proper_pairs 1 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -bam samples_5inds.list -rf scaffolds.list
+	angsd -GL 2 -out GL_75inds -ref ${REF} -nThreads 4 -doGlf 2 -doMajorMinor 1 -SNP_pval 1e-6 -doMaf 1 -only_proper_pairs 1 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -bam ${metadata_dir}/samples_5inds.list -rf ${metadata_dir}/scaffolds.list
 
-## Step 2\. Run PCA via PCAngsd. 
+## Step 2\. Run PCA via PCAngsd
 
-Let's first look at PCAngsd's options:
+Let's open a Docker container in a new tab (running PCAngsd) and first look at PCAngsd's options:
 	
+	docker run --name pcangsd --mount source=myvol,target=/data -w /data/ -it --rm didillysquat/pcangsd
 	pcangsd.py -h
 
-Then run the PCA (adjust the number of threads accordingly)
+Then run the PCA
 
-	prefix="GL_95inds"
 	prefix="GL_75inds"
 	pcangsd.py -beagle ${prefix}.beagle.gz -threads 2 -o ${prefix}.pcangsd
 
 We can then plot the results (PC1 vs PC2) in R as follows (don't forget to upload pop metadata files for PCA, admixture, FST to your github!);
 	R code
 
-## Step 3\. Copy file to/from the Docker container (volume) to local computer. Alternatively, let's write R script and upload on Github repo. Then easy to run as Rscript, output as html. Then copy to local computer.
+## Step 3\. Plot PCA results
 
-Copy files to/from container (volume) to local filesystem (here we create a temporary container (named temp) with our named volume mounted)
+Let's plot the results of the PCA. Let's first copy the output (GL_75inds.pcangsd.cov) from the Docker container (volume) to your local computer (here we create a temporary container (named temp) with our named volume mounted). Let's also some code while we are it.
 
-	docker run --name temp --mount source=myvol3,target=/data -w /data ubuntu
-	docker cp temp:/data/Workshop/Data/GL_95inds.pcangsd.cov ./Desktop/Test/
-	#remove/detach docker contained after copying
+	docker run --name temp --mount source=myvol,target=/data -w /data ubuntu
+	docker cp temp:/data/Workshop/Data/GL_75inds.pcangsd.cov ./Desktop/
+	docker cp temp:/data/Workshop/Metadata ./Desktop/
+	docker stop temp
 
-## Step 4\. Plot PCA results
+The output file together with some plotting scripts should now have been downloaded to your Desktop (if not, please check the paths in the code above).
 
-Let's add the plotly PCA results (embed html)!  Let's add map to githubs totorial.
+Open PCA.R in RStudio and run the code. It will be necessary to change the path on line 10 of the code to the path of your Desktop (or the path where you downloaded to). If you have time, see if you can follow some of the code. 
 
-How do we interpet the results?
+<details>
 
-We find three distinct clusters. How much variance is explained by the first two principle components (PCs)? 
+<summary>Click here to expand</summary>
 
-Here, the PCA is relatively straightforward to interpret, however, in many cases, geographic clines, admixture, bottlenecks and complex demography in general can make interpretations of PCA more difficult to interpret. The following papers provide some good pointers on how to deduce more complex patterns from PCA: [Novembre & Stephens 2008](https://www.nature.com/articles/ng.139), [François et al. 2010](https://academic.oup.com/mbe/article/27/6/1257/1109324), and [Gompert & Buerkle 2016](https://onlinelibrary.wiley.com/doi/full/10.1111/eva.12380)
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_pca.png" width="400"> 
+
+</details>
+
+<br>
+
+How do we interpet the results? How much variance is explained by the first two principle components (PCs)? 
+
+In certain cases, geographic clines, admixture, bottlenecks and complex demography in general can complicate interpretations of PCA. The following papers provide some good pointers on how to deduce more complex patterns from PCA: [Novembre & Stephens 2008](https://www.nature.com/articles/ng.139), [François et al. 2010](https://academic.oup.com/mbe/article/27/6/1257/1109324), and [Gompert & Buerkle 2016](https://onlinelibrary.wiley.com/doi/full/10.1111/eva.12380)
 
 <br>
 
@@ -243,24 +258,24 @@ Here, the PCA is relatively straightforward to interpret, however, in many cases
 
 Another way to investigate population structure is by looking at admixture (or ancestry) proportions in populations. This can be achieved through a model-based clustering method where we assume ***K*** populations (***K*** may be unknown), each of which is characterised by a set of allele frequencies. Individuals are then assigned probabilistically to 1 - ***K*** populations (where assignment to > 1 population indicates population admixture). Here, we will use a genotype likelihood implementation of admixture inference using PCAngsd. 
 
-
 ## Step 1\. Infer admixture proportions via PCAngsd. 
 
 Similar to before, PCAngsd takes as input genotype likelihoods in beagle format, which we generated before in the previous section. To estimate admixture proportions in PCangsd, we add the -admix argument. When inferring admixture, it is always advisable to do so over different values of ***K***, so we will iterate the command in a *for* loop. Here, we do so via the -e argument which defines the number of eigenvalues, rather than via -admix_K (as the latter is not recommended). We then define an alpha (sparseness regularisation) parameter, which can be specified manually (-admix_alpha) or here, automatically (-admix_auto) specifying only a soft upper bound.
+
+Let's go back to the terminal running our PCAngsd container and run the following command:
 
 	for k in $(seq 1 2); do
 		pcangsd.py -beagle ${prefix}.beagle.gz -threads 2 -e ${k} -admix -admix_auto 10000 -o ${prefix}.admix.pcangsd.K$((${k}+1))
 	done
 
-## Step 2\. Copy file to/from the Docker container (volume) to local computer. Alternatively, let's write R script and upload on Github repo. Then easy to run as Rscript, output as html. Then copy to local computer.
+## Step 2\. Plot admixture results
 
-Either write R code, or upload R code on Github repo to allow easy execution of Rscript in Docker
+Let's plot the results from the admixture analysis. Let's first copy the output (GL_75inds.admix.pcangsd.K3.admix.2.Q, GL_75inds.admix.pcangsd.K3.admix.3.Q) from the Docker container (volume) to your local computer.
 
-Copy files to/from container (volume) to local filesystem (here we create a temporary container (named temp) with our named volume mounted)
-
-	docker run --name temp --mount source=myvol3,target=/data -w /data ubuntu
-	docker cp temp:/data/Workshop/Data/admix_results ./Desktop/Test/
-	#remove/detach docker contained after copying
+	docker run --name temp --mount source=myvol,target=/data -w /data ubuntu
+	docker cp temp:/data/Workshop/Data/GL_75inds.admix.pcangsd.K2.admix.2.Q ./Desktop/
+	docker cp temp:/data/Workshop/Data/GL_75inds.admix.pcangsd.K3.admix.3.Q ./Desktop/
+	docker stop temp
 
 ## Step 3\. Plot admixture results
 
