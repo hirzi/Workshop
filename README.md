@@ -312,11 +312,11 @@ Open Plot_PCA.R in RStudio and run the code. It will be necessary to change the 
 
 <br>
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/PCA_result2.png" width="700"> 
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/PCA_result2.png" width="750"> 
 
 Or sorted exclusively by region:
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/PCA_result1.png" width="700"> 
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/PCA_result1.png" width="600"> 
 
 </details>
 
