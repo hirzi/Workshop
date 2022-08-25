@@ -173,9 +173,6 @@ Index all the BAM files (here we'll do this in a for loop):
 
 	for i in $(ls *bam); do samtools index ${i}; done
 
-!!!!!!!!!!!!!!! Make sample list (let's actually have this in the Github, in case htere are difference with file ordering)
-!!!!!!!!!!!!!!!#ls *bam > samples.list
-
 <br>
 
 # Principle component analysis
@@ -223,9 +220,6 @@ Then run the PCA
 	cd /data/Workshop/Data
 	prefix="GL_75inds"
 	pcangsd.py -beagle ${prefix}.beagle.gz -threads 2 -o ${prefix}.pcangsd
-
-We can then plot the results (PC1 vs PC2) in R as follows (don't forget to upload pop metadata files for PCA, admixture, FST to your github!);
-	R code
 
 ## Step 3\. Plot PCA results
 
