@@ -1,4 +1,4 @@
-# Inferring population structure, summary statistics & selection from low-coverage whole genome sequencing (WGS) data
+# Inferring population structure & selection from low-coverage whole genome sequencing (WGS) data
 
   - [Introduction](#introduction)
   - [Workshop - initial preparation](#workshop---initial-preparation)
