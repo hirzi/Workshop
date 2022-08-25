@@ -244,7 +244,7 @@ Open PCA.R in RStudio and run the code. It will be necessary to change the path 
 
 <summary>Click here to expand and see PCA result</summary>
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_pca.png" width="400"> 
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/PCA_result.png" width="800"> 
 
 </details>
 
@@ -286,9 +286,9 @@ Then, open Admix.R in RStudio (this will be in the same folder as PCA.R used in 
 
 <summary>Click here to expand and see admixture results</summary>
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_pca.png" width="400"> 
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Admixture_result_K2.png" width="800"> 
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_pca.png" width="400"> 
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Admixture_result_K3.png" width="800"> 
 
 </details>
 
@@ -338,15 +338,17 @@ Let's define some path and file variables:
 	out_dir=/data/Workshop/Data/1pop_sumstats
 	mkdir ${out_dir}
 
-Here, we will calculate the SFS and summary statistics for three populations comprising 15 individuals each.
+Here, we will calculate the SFS and summary statistics for three populations comprising 15 individuals each. *Note, in case the below analyses runs slow, consider increasing the number of threads via the -P argument in the angsd command (limited by number of CPU cores/threads on computer).*
 
 	for i in $(seq 1 3); do
 		# assign population list
 		pop=`sed -n ${i}p < ${metadata_dir}/pop15inds.list`
+		#pop=`sed -n ${i}p < ${metadata_dir}/pop5inds.list`
 		# assign individual BAM files that constitute population 
-		pop_bamlist=${metadata_dir}/Population_lists_15inds/${pop}.list
+		pop_bamlist=${metadata_dir}/Population_lists_15inds/${pop}_15inds.list
+		#pop_bamlist=${metadata_dir}/Population_lists_5inds/${pop}.list
 		# First, we calculate the site allele frequency likelihoods (SAFs).
-		angsd -b ${pop_bamlist} -doSaf 1 -anc ${REF} -ref ${REF} -GL 2 -P 2 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -only_proper_pairs 1 -doCounts 1 -setMinDepth 10 -setMaxDepth 75 -minInd 3 -out ${out_dir}/${pop}
+		angsd -b ${pop_bamlist} -doSaf 1 -anc ${REF} -ref ${REF} -GL 2 -P 4 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -only_proper_pairs 1 -doCounts 1 -setMinDepth 10 -setMaxDepth 75 -minInd 3 -out ${out_dir}/${pop}
 		# Then, we obtain the maximum likelihood estimate of the SFS (here for the folded spectrum since we do not have information of ancestral states)
 		realSFS ${out_dir}/${pop}.saf.idx -P 2 -fold 1 > ${out_dir}/${pop}.sfs
 		# We calculate the thetas for each site
@@ -360,7 +362,7 @@ Let's have a look at the results.
 First, let's look at the SFS (here e.g. for the population "Val_da_la_Stura")
 
 	cd ${out_dir}
-	cat Val_da_la_Stura_15inds.sfs
+	cat Val_da_la_Stura.sfs
 
 Let's plot this in R.
 
@@ -371,13 +373,15 @@ How does the SFS look like? Is it what we expect?
 Let's also have a look at the per-site thetas (again here for the population "Val_da_la_Stura"; but also do so for the other populations). The file can be very big so let's open it with *less* (which we will first need to install)
 
 	apt-get install less
-	thetaStat print Val_da_la_Stura_15inds.thetas.idx | less -S
+	thetaStat print Val_da_la_Stura.thetas.idx | less -S
 
 Finally, we can have a look at various neutrality statistics for the different scaffold
 
-	cat Val_da_la_Stura_15inds.thetas.idx.pestPG
+	cat Val_da_la_Stura.thetas.idx.pestPG
 
-For detecting genetic loci under selection, we can plot the various thetas and neutrality statistics along a sliding window to find loci whose statistics are distinct to that of the rest of the genome (for help with interpreting some the output neutrality statistics, refer to [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1667063) and [here](https://academic.oup.com/genetics/article/207/1/229/5930677)). This typically requires generating a null distribution for the summary statistic (either from the empirical genome-wide distribution or simulated under an appropriate demographic model, as demonstrated in yesterday's workshop) to obtain a measure of statistical significance. We can also use the SFS to more explicitly infer the demography of the population, e.g. by leveraging the expected waiting times between coalescent events to assess the variation over time in the effective population size affects e.g. via methods like Bayesian skyline or [stairway](https://github.com/xiaoming-liu/stairway-plot-v2) plots, or by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master), [moments](https://bitbucket.org/simongravel/moments/src/main), [momi](https://github.com/popgenmethods/momi2), [fastsimcoal](http://cmpg.unibe.ch/software/fastsimcoal27)). 
+For detecting genetic loci under selection, we can plot the various thetas and neutrality statistics along a sliding window to find loci whose statistics are distinct to that of the rest of the genome (for help with interpreting some the output neutrality statistics, refer to [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1667063) and [here](https://academic.oup.com/genetics/article/207/1/229/5930677)). This typically requires generating a null distribution for the summary statistic (either from the empirical genome-wide distribution or simulated under an appropriate demographic model, as demonstrated in yesterday's workshop) to obtain a measure of statistical significance. 
+
+We can also use the SFS to more explicitly infer the demography of the population, e.g. by leveraging the expected waiting times between coalescent events to assess the variation over time in the effective population size affects e.g. via methods like Bayesian skyline or [stairway](https://github.com/xiaoming-liu/stairway-plot-v2) plots, or by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master), [moments](https://bitbucket.org/simongravel/moments/src/main), [momi](https://github.com/popgenmethods/momi2), [fastsimcoal](http://cmpg.unibe.ch/software/fastsimcoal27)). 
 
 Note: We could also calculate the SFS for all populations in our dataset in Docker, but note that for the other 12 populations, we only have 5 individuals per population. This means that estimations of allele frequencies and summary statistics will be much more coarse (as we can detect fewer frequency classes). You can try to calculate the SFS and summary statstics based on 5 individuals per population to see this effect [OPTIONAL]. *The trade-off of having more populations but with less accurate data per population vs. less populations with more accurate data per population is an important consideration when designing population genetic studies.*
 
@@ -387,46 +391,71 @@ A useful statistic to calculate between pairs of populations is their population
 
 To calculate ***FST*** between all our population pairs, let's first make a list of all population pairs.
 
+	cd ${metadata_dir}
+	chmod u+x make_list_pairwise.sh
 	./make_list_pairwise.sh
 
-We can then calculate the ***FST*** for each population pair by looping over each line of the pairwise list.
+We can then calculate the ***FST*** for each population pair by looping over each line of the pairwise list. *Note, this may take a few minutes to complete. In case it takes too long, consider increasing the number of threads via the -P argument in the angsd command (limited by number of CPU cores/threads on computer).*
 
-	for i in $(seq 1 15); do
+	cd /data/Workshop/Data
+	for i in $(seq 1 3); do
 		# read in population pairs list
-		pop=`sed -n ${i}p < ${working_dir}/list_pop_name_pairs/pop_name_pairs`
+		pop=`sed -n ${i}p < ${metadata_dir}/pop_name_pairs`
 		# Note, set allows you to define the elements of your list as variables, according to their order
 		set -- $pop
 		# Calculate the 2D SFS prior
-		realSFS ${input_dir}/${1}.saf.idx ${input_dir}/${2}.saf.idx -P 2 -fold 1 > ${output_dir}/${1}.${2}.ml
-		# Prepare FSTs for easy window analysis. The option -whichFst 1 should be preferable for small sample sizes.
-		realSFS fst index ${input_dir}/${1}.saf.idx ${input_dir}/${2}.saf.idx -sfs ${output_dir}/${1}.${2}.ml -fstout ${output_dir}/${1}.${2}.stats -whichFst 1
+		realSFS ${out_dir}/${1}.saf.idx ${out_dir}/${2}.saf.idx -P 4 -fold 1 > ${out_dir}/${1}.${2}.sfs
+		# Prepare FSTs for easy window analysis. The option -whichFst 1 is preferable for small sample sizes.
+		realSFS fst index ${out_dir}/${1}.saf.idx ${out_dir}/${2}.saf.idx -sfs ${out_dir}/${1}.${2}.sfs -fstout ${out_dir}/${1}.${2}.stats -whichFst 1
 		# Get the global estimate
-		FST=`/cluster/project/gdc/shared/tools/angsd0_933/angsd/misc/realSFS fst stats ${output_dir}/${1}.${2}.stats.fst.idx`
-		printf "${1}\t${2}\t${FST}\n" >> ${output_dir}/FST_summary.txt
+		FST=`realSFS fst stats ${out_dir}/${1}.${2}.stats.fst.idx`
+		printf "${1}\t${2}\t${FST}\n" >> ${out_dir}/FST_summary.txt
+		cat ${out_dir}/FST_summary.txt
 		# Get sliding window estimates
-		realSFS fst stats2 ${output_dir}/${1}.${2}.stats.fst.idx -win 50000 -step 10000 > slidingwindow
+		realSFS fst stats2 ${out_dir}/${1}.${2}.stats.fst.idx -win 10000 -step 1000 > ${1}.${2}.stats.slidingwindow
 	done
 
-Let's have a look at the ***FST*** results. Which population pairs are genetically closest to each other? Which are furthest apart? You can use the included plotting script (xxx.R) to plot a heatmap of the ***FST*** results (PREPARE R PLOTTING SCRIPT FOR FST, EMBED THE RESULTS HERE!!). A common way to detect selection leveraging population pairs is to calculate ***FST*** in a sliding window across the genome to find loci whose ***FST*** is significantly higher (indicative of positive selection in one population but not the other) or lower (potentially indicative of balancing selection) than the genome-wide average. As in the case of single-population outlier stastitcs, this typically requires generating a null distribution for ***FST*** to obtain a measure of statistical significance.
+Let's have a look at the ***FST*** results.
 
-In addition to using the 2D SFS as a prior to calculate ***FST***, we can use it directly to infer the demography of the population pair, by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master), [moments](https://bitbucket.org/simongravel/moments/src/main), [momi](https://github.com/popgenmethods/momi2), [fastsimcoal](http://cmpg.unibe.ch/software/fastsimcoal27)). Here, migration rates and time of population divergence, in addition to effective population sizes, are the typical demographic parameters of interest.
+	cat FST_summary.txt
+	Kapetanovo_Jezero.Legn_Mar_Scuol.stats.slidingwindow | less -S
+	Kapetanovo_Jezero.Val_da_la_Stura.stats.slidingwindow  | less -S
+	Kapetanovo_Jezero.Legn_Mar_Scuol.stats.slidingwindow  | less -S
 
+Which population pairs are genetically closest to each other? Which are furthest apart? A common way to detect selection leveraging population pairs is to calculate ***FST*** in a sliding window across the genome to find loci whose ***FST*** is significantly higher (indicative of positive selection in one population but not the other) or lower (potentially indicative of balancing selection) than the genome-wide average. As in the case of single-population outlier stastistics, this typically requires generating a null distribution for ***FST*** to obtain a measure of statistical significance.
+
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Manhattan_plot" width="650">
+
+In addition to using the 2D SFS as a prior to calculate ***FST***, we can use it directly to infer the demography of the population pair, by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master), [moments](https://bitbucket.org/simongravel/moments/src/main), [momi](https://github.com/popgenmethods/momi2), [fastsimcoal](http://cmpg.unibe.ch/software/fastsimcoal27)). Here, migration rates and time of population divergence, in addition to effective population sizes, are typical demographic parameters of interest.
 
 ## Three populations
 
-When we have three populations, we can measure the branch lengths between the three populations (employing one as an outgroup) to detect extreme allele frequency change (in a locus) in one population (relative to the other). This statistic, called the population branch statistic (***PBS***) thus represents another way to infer selection. 
+When we have three populations, we can measure the branch lengths between the three populations (employing one as an outgroup) to detect extreme allele frequency change (in a locus) in one population (relative to the other non-outgroup population). This statistic, called the population branch statistic (***PBS***) represents another way to infer selection.
 
-We can use ANGSD to calculate the PBS via extending the previous command to run ***FST*** to three populations.(Select 3 populations, i.e. one population each from each lineage. Code is similar to that above for FST (see ANGSD and low-cov tutorial website)_
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/PBS.png" width="650">
 
-	realSFS fst index pop1.saf.idx pop2.saf.idx pop3.saf.idx -sfs pop1.pop2.ml -sfs pop1.pop3.ml -sfs pop2.pop3.ml -fstout out.pbs -whichFst 1
+(*EPAS 1 gene; Yi et al. 2010*)
+
+We can use ANGSD to calculate the PBS via extending the previous ***FST*** command to three populations.
+
+	cd /data/Workshop/Data/1pop_sumstats
+	realSFS fst index Kapetanovo_Jezero.saf.idx Legn_Mar_Scuol.saf.idx Val_da_la_Stura.saf.idx -sfs Kapetanovo_Jezero.Legn_Mar_Scuol.sfs -sfs Kapetanovo_Jezero.Val_da_la_Stura.sfs -sfs Legn_Mar_Scuol.Val_da_la_Stura.sfs -fstout 3pops_KJ_LMS_VDLS.pbs -whichFst 1
+	# Get global estimates
+	PBS=`realSFS fst stats ${out_dir}/3pops_KJ_LMS_VDLS.pbs.fst.idx`
+	printf "Kapetanovo_Jezero\tLegn_Mar_Scuol\tVal_da_la_Stura\t${PBS}\n" > ${out_dir}/PBS_summary.txt
+	# Get sliding window estimates
+	realSFS fst stats2 3pops_KJ_LMS_VDLS.pbs.fst.idx -win 10000 -step 1000 > 3pops_KJ_LMS_VDLS.pbs.slidingwindow
 
 Let's have a look at the results.
 
-	realSFS fst print pop1.pbs.fst.idx | less -S
+	cat PBS_summary.txt
+	realSFS fst print 3pops_KJ_LMS_VDLS.pbs.fst.idx | less -S
 
-Separately, we can calculate the three population (3D) SFS as follows (note that calculating the joint SFS for >/=3 populations can be very slow):
+Here, the columns are: region	chr	midPos	Nsites	Fst01	Fst02	Fst12	PBS0	PBS1	PBS2, and populations 0, 1 and 2 refer to Kapetanovo_Jezero, Legn_Mar_Scuol and Val_da_la_Stura respectively. Note that sometimes we may get negative PBS and FST values in the output; these are equivalent to 0.
 
-	realSFS ${input_dir}/${1}.saf.idx ${input_dir}/${2}.saf.idx ${input_dir}/${3}.saf.idx -P 8 > ${output_dir}/${1}.${2}.${3}.sfs
+Separately, we can calculate the three population (3D) SFS as follows (note that calculating the joint SFS for >/=3 populations can be very slow, *so we won't run this*):
+
+	realSFS ${out_dir}/Kapetanovo_Jezero.saf.idx ${out_dir}/Legn_Mar_Scuol.saf.idx ${out_dir}/Val_da_la_Stura.saf.idx -P 8 > ${out_dir}/3pops_KJ_LMS_VDLS.sfs
 
 Similar to above, the 3D-SFS can be used infer the demography of the population trio, by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master), [moments](https://bitbucket.org/simongravel/moments/src/main), [momi](https://github.com/popgenmethods/momi2), [fastsimcoal](http://cmpg.unibe.ch/software/fastsimcoal27)).
 
