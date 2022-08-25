@@ -397,6 +397,8 @@ Then, open Plot_admix.R in RStudio (this will be in the same folder as PCA.R use
 
 <br>
 
+Here shown for ***K*** = 3
+
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Admixture_result_K3_2.png" width="800"> 
 
 </details>
