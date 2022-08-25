@@ -251,7 +251,7 @@ Open Plot_PCA.R in RStudio and run the code. It will be necessary to change the 
 	library(ggpubr)
 
 	# Set working directory (change this to your own)
-	setwd("/Users/hirzi/Desktop/")
+	setwd("/Users/hirzi/Documents/Hirzi/Cambridge/IndonesiaTrip_Aug22/Workshop/Tutorial/")
 
 	# Define number of principle components to plot
 	components<-"1-2"
@@ -286,18 +286,20 @@ Open Plot_PCA.R in RStudio and run the code. It will be necessary to change the 
 	col_regions <- c("Balkan" = "darkseagreen2", "Apennine" = "orange", "Alpine" = "darkred")
 	col2_regions <- c("Balkan" = "grey5", "Apennine" = "grey5", "Alpine" = "grey5")
 
-	par(mar=c(5.1,4.1,8,2.1))
+	par(mar=c(5,5,8,2))
 	par(mfrow=c(1,1))
 
 	title <- paste("PC",comp[1]," (",signif(eig$val[comp[1]], digits=3)*100,"%)"," / PC",comp[2]," (",signif(eig$val[comp[2]], digits=3)*100,"%)",sep="",collapse="")
 	x_axis = paste("PC",comp[1],sep="")
 	y_axis = paste("PC",comp[2],sep="")
 
-	pl <- ggplot() + geom_point(data=PC, size = 6, aes_string(x=x_axis, y=y_axis, color=PC$Pop, shape = PC$Region)) + theme_bw() + scale_colour_hue(name = "POPULATION") + scale_shape_manual(name = "REGION", values = cols_regions) + ggtitle(title)
-	plot(pl)
+	pl1 <- ggplot() + geom_point(data=PC, size = 6, aes_string(x=x_axis, y=y_axis, color=PC$Pop, fill=PC$Pop, shape = PC$Metaregion)) + theme_bw() + theme(axis.line = element_line(colour = "black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), legend.position="right") + scale_colour_hue(name = "POPULATION") + scale_shape_manual(name = "REGION", values = shape_regions) + scale_fill_discrete(guide="none") + ggtitle(title)
+	pl2 <- ggplot() + geom_point(data=PC, alpha = 1, size = 6, stroke = 0.3, aes_string(x=x_axis, y=y_axis, color=PC$Metaregion, fill=PC$Metaregion, shape = PC$Metaregion)) + theme_bw() + theme(axis.line = element_line(colour = "black"), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), legend.position="bottom") + scale_colour_manual(name = "REGION", values = col2_regions) + scale_fill_manual(name = "REGION", values = col_regions) + scale_shape_manual(name = "REGION", values = shape_regions) + ggtitle(title)
+	plot(pl1)
+	plot(pl2)
 
 	# Make an interactive plotly plot
-	pl_plotly <- ggplotly(pl)
+	pl_plotly <- ggplotly(pl1)
 	pl_plotly
 
 </details>
@@ -310,7 +312,7 @@ Open Plot_PCA.R in RStudio and run the code. It will be necessary to change the 
 
 <br>
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/PCA_result.png" width="800"> 
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/PCA_result2.png" width="750"> 
 
 </details>
 
