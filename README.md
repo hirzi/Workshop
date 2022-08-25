@@ -428,7 +428,7 @@ Let's have a look at the ***FST*** results.
 
 Which population pairs are genetically closest to each other? Which are furthest apart? A common way to detect selection leveraging population pairs is to calculate ***FST*** in a sliding window across the genome to find loci whose ***FST*** is significantly higher (indicative of positive selection in one population but not the other) or lower (potentially indicative of balancing selection) than the genome-wide average. As in the case of single-population outlier stastistics, this typically requires generating a null distribution for ***FST*** to obtain a measure of statistical significance.
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Manhattan_plot.png" width="800">
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Manhattan_plot.png" width="600">
 
 In addition to using the 2D SFS as a prior to calculate ***FST***, we can use it directly to infer the demography of the population pair, by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master), [moments](https://bitbucket.org/simongravel/moments/src/main), [momi](https://github.com/popgenmethods/momi2), [fastsimcoal](http://cmpg.unibe.ch/software/fastsimcoal27)). Here, migration rates and time of population divergence, in addition to effective population sizes, are typical demographic parameters of interest.
 
@@ -436,7 +436,7 @@ In addition to using the 2D SFS as a prior to calculate ***FST***, we can use it
 
 When we have three populations, we can measure the branch lengths between the three populations (employing one as an outgroup) to detect extreme allele frequency change (in a locus) in one population (relative to the other non-outgroup population). This statistic, called the population branch statistic (***PBS***) represents another way to infer selection.
 
-<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/PBS.png" width="400">
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/PBS.png" width="300">
 
 (*EPAS 1 gene; Yi et al. 2010*)
 
