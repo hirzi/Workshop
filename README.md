@@ -203,6 +203,7 @@ Let's first open a Docker container in a new tab (running ANGSD):
 
 Here, we first assign the reference sequence fasta file to a variable, so that it is easy to refer to in the next steps (we can expand a variable *i* via ${*i*}.
 
+	cd /data/Workshop/Data
 	REF=/data/Workshop/Data/assembly_homozygous.fa
 	metadata_dir=/data/Workshop/Metadata
 
@@ -219,6 +220,7 @@ Let's open a Docker container in a new tab (running PCAngsd) and first look at P
 
 Then run the PCA
 
+	cd /data/Workshop/Data
 	prefix="GL_75inds"
 	pcangsd.py -beagle ${prefix}.beagle.gz -threads 2 -o ${prefix}.pcangsd
 
@@ -240,7 +242,7 @@ Open PCA.R in RStudio and run the code. It will be necessary to change the path 
 
 <details>
 
-<summary>Click here to expand</summary>
+<summary>Click here to expand and see PCA result</summary>
 
 <img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_pca.png" width="400"> 
 
@@ -264,6 +266,7 @@ Similar to before, PCAngsd takes as input genotype likelihoods in beagle format,
 
 Let's go back to the terminal running our PCAngsd container and run the following command:
 
+	cd /data/Workshop/Data
 	for k in $(seq 1 2); do
 		pcangsd.py -beagle ${prefix}.beagle.gz -threads 2 -e ${k} -admix -admix_auto 10000 -o ${prefix}.admix.pcangsd.K$((${k}+1))
 	done
@@ -277,13 +280,23 @@ Let's plot the results from the admixture analysis. Let's first copy the output 
 	docker cp temp:/data/Workshop/Data/GL_75inds.admix.pcangsd.K3.admix.3.Q ./Desktop/
 	docker stop temp
 
-## Step 3\. Plot admixture results
+Then, open Admix.R in RStudio (this will be in the same folder as PCA.R used in the previous section). It will be necessary to change the path on line 8 of the code to the path of your Desktop (or the path where you downloaded to). Run the code for ***K***= 2 and 3 (line 5).
 
-Let's add the plotly/interactive admixture results (embed html or shiny app)!
+<details>
 
-Similar to our PCA analysis, we find three distinct clusters, with minimal admixture between clusters. 
+<summary>Click here to expand and see admixture results</summary>
 
-Note: while here the results are relatively clear, it is important to note that inferences of admixture can easily be misinterpreted, e.g. if the dataset cannot biologically be delimited into discrete ***K*** populations (as in the case of a continous geographic cline), [if the dataset is imbalanced](https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12512) (with regard to sample sizes of each cluster), or under complex demography (e.g. [recent bottleneck](https://www.nature.com/articles/s41467-018-05257-7)).
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_pca.png" width="400"> 
+
+<img src="https://github.com/hirzi/Workshop/blob/main/Example_figures/Pcangsd_pca.png" width="400"> 
+
+</details>
+
+<br>
+
+How do we interpet the results? Is there a lot of admixture between populations? If so, between which populations?
+
+Note: it is important to note that inferences of admixture can easily be misinterpreted, e.g. if the dataset cannot biologically be delimited into discrete ***K*** populations (as in the case of a continous geographic cline), [if the dataset is imbalanced](https://onlinelibrary.wiley.com/doi/10.1111/1755-0998.12512) (with regard to sample sizes of each cluster), or under complex demography (e.g. [recent bottleneck](https://www.nature.com/articles/s41467-018-05257-7)).
 
 <br>
 
@@ -315,27 +328,62 @@ Because of this information held in the SFS, many diversity statistics (e.g. nuc
 
 Here, we will ANGSD to calculate the SFS for single populations, from which we will estimate various thetas and neutrality statistics.
 
-	for i in $(seq 1 15); do
+First, let's go back to the terminal running our ANGSD container (or load it again via: docker run --name angsd --mount source=myvol,target=/data -w /data/ -it --rm zjnolen/angsd)
+
+Let's define some path and file variables:
+	
+	cd /data/Workshop/Data
+	metadata_dir=/data/Workshop/Metadata
+	REF=/data/Workshop/Data/assembly_homozygous.fa
+	out_dir=/data/Workshop/Data/1pop_sumstats
+	mkdir ${out_dir}
+
+Here, we will calculate the SFS and summary statistics for three populations comprising 15 individuals each.
+
+	for i in $(seq 1 3); do
 		# assign population list
-		pop=`sed -n ${i}p < pop5inds.list`
+		pop=`sed -n ${i}p < ${metadata_dir}/pop15inds.list`
 		# assign individual BAM files that constitute population 
-		pop_bamlist='./Population_lists_5inds/'${pop}.5inds
+		pop_bamlist=${metadata_dir}/Population_lists_15inds/${pop}.list
 		# First, we calculate the site allele frequency likelihoods (SAFs).
-		angsd -b ${pop_bamlist} -doSaf 1 -anc ${REF} -ref ${REF} -GL 2 -P 2 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -only_proper_pairs 1 -doCounts 1 -setMinDepth 10 -setMaxDepth 75 -minInd 3 -out ${OUT}/${pop}
+		angsd -b ${pop_bamlist} -doSaf 1 -anc ${REF} -ref ${REF} -GL 2 -P 2 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -only_proper_pairs 1 -doCounts 1 -setMinDepth 10 -setMaxDepth 75 -minInd 3 -out ${out_dir}/${pop}
 		# Then, we obtain the maximum likelihood estimate of the SFS (here for the folded spectrum since we do not have information of ancestral states)
-		realSFS ${OUT}/${pop}.saf.idx -P 2 -fold 1 > ${OUT}/${pop}.sfs
+		realSFS ${out_dir}/${pop}.saf.idx -P 2 -fold 1 > ${out_dir}/${pop}.sfs
 		# We calculate the thetas for each site
-		realSFS saf2theta ${OUT}/${pop}.saf.idx -sfs ${OUT}/${pop}.sfs -outname ${OUT}/${pop}
+		realSFS saf2theta ${out_dir}/${pop}.saf.idx -sfs ${out_dir}/${pop}.sfs -outname ${out_dir}/${pop}
 		# Anf finally estimate various thetas and neutrality statistics
-		thetaStat do_stat ${OUT}/${pop}.thetas.idx
+		thetaStat do_stat ${out_dir}/${pop}.thetas.idx
 	done
 
-Let's have a look at the results. For detecting genetic loci under selection, we can plot the various thetas and neutrality statistics along a sliding window to find loci whose statistics are distinct to that of the rest of the genome (for help with interpreting some the output neutrality statistics, refer to [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1667063) and [here](https://academic.oup.com/genetics/article/207/1/229/5930677)). This typically requires generating a null distribution for the summary statistic (either from the empirical distribution or simulated under an appropriate demographic model) to obtain a measure of statistical significance. We can also use the SFS to more explicitly infer the demography of the population, e.g. by leveraging the expected waiting times between coalescent events to assess the variation over time in the effective population size affects e.g. via a method like [stairway plot](https://github.com/xiaoming-liu/stairway-plot-v2), or by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master), [moments](https://bitbucket.org/simongravel/moments/src/main), [momi](https://github.com/popgenmethods/momi2), [fastsimcoal](http://cmpg.unibe.ch/software/fastsimcoal27)). 
+Let's have a look at the results. 
 
+First, let's look at the SFS (here e.g. for the population "Val_da_la_Stura")
+
+	cd ${out_dir}
+	cat Val_da_la_Stura_15inds.sfs
+
+Let's plot this in R.
+
+	barplot(sfs[-c(1,length(sfs))]) # where sfs is the vector of frequencies
+
+How does the SFS look like? Is it what we expect?
+
+Let's also have a look at the per-site thetas (again here for the population "Val_da_la_Stura"; but also do so for the other populations). The file can be very big so let's open it with *less* (which we will first need to install)
+
+	apt-get install less
+	thetaStat print Val_da_la_Stura_15inds.thetas.idx | less -S
+
+Finally, we can have a look at various neutrality statistics for the different scaffold
+
+	cat Val_da_la_Stura_15inds.thetas.idx.pestPG
+
+For detecting genetic loci under selection, we can plot the various thetas and neutrality statistics along a sliding window to find loci whose statistics are distinct to that of the rest of the genome (for help with interpreting some the output neutrality statistics, refer to [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1667063) and [here](https://academic.oup.com/genetics/article/207/1/229/5930677)). This typically requires generating a null distribution for the summary statistic (either from the empirical genome-wide distribution or simulated under an appropriate demographic model, as demonstrated in yesterday's workshop) to obtain a measure of statistical significance. We can also use the SFS to more explicitly infer the demography of the population, e.g. by leveraging the expected waiting times between coalescent events to assess the variation over time in the effective population size affects e.g. via methods like Bayesian skyline or [stairway](https://github.com/xiaoming-liu/stairway-plot-v2) plots, or by comparing simulated SFS (generated under particular demographic models) against the empirical (observed) SFS (e.g. via [dadi](https://bitbucket.org/gutenkunstlab/dadi/src/master), [moments](https://bitbucket.org/simongravel/moments/src/main), [momi](https://github.com/popgenmethods/momi2), [fastsimcoal](http://cmpg.unibe.ch/software/fastsimcoal27)). 
+
+Note: We could also calculate the SFS for all populations in our dataset in Docker, but note that for the other 12 populations, we only have 5 individuals per population. This means that estimations of allele frequencies and summary statistics will be much more coarse (as we can detect fewer frequency classes). You can try to calculate the SFS and summary statstics based on 5 individuals per population to see this effect [OPTIONAL]. *The trade-off of having more populations but with less accurate data per population vs. less populations with more accurate data per population is an important consideration when designing population genetic studies.*
 
 ## Two populations
 
-A useful statistic to calculate between pairs of populations is their population genetic differentiation (***FST***). Here, we will use ANGSD to calculate the ***FST*** between our population pairs. To do this, ANGSD first calculates the two population (2D) SFS, which it uses as a prior (together with the site allele frequency likelihoods of the single populations, calculated in the previous step) to calculate the ***FST***.
+A useful statistic to calculate between pairs of populations is their population genetic differentiation (***FST***). Here, we will use ANGSD to calculate the ***FST*** between our population pairs. To do this, ANGSD first calculates the two population or joint (2D) SFS, which it uses as a prior (together with the site allele frequency likelihoods of the single populations, calculated in the previous step) to calculate the ***FST***.
 
 To calculate ***FST*** between all our population pairs, let's first make a list of all population pairs.
 
