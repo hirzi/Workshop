@@ -138,8 +138,9 @@ Then we download data. All the BAM files as well as population metadata are depo
 
 	git clone https://github.com/hirzi/Workshop.git
 
-Once downloaded, let's navigate to the /data directory containing the samples. Once there and before we continue, let's download the reference sequence. The reference is deposited in a separate repository (because it's large file).
+Once downloaded, let's navigate to the /data/Workshop/Data/ directory containing the samples. Once there and before we continue, let's download the reference sequence. The reference is deposited in a separate repository (because it's large file).
 
+	cd /data/Workshop/Data/
 	wget https://www.dropbox.com/s/1nggjjhrcjseuwx/assembly_homozygous.fa?dl=1
 
 Let's rename this reference sequence file.
@@ -150,13 +151,12 @@ Let's rename this reference sequence file.
 
 Now that we have all the data downloaded, let's try a few bash commands to see what we have.
 
-	cd /data/Workshop/Data/
 	ls
 	ls -lrth *bam
 
-How many BAM files (i.e. samples) are there? (hint: ls \*bam | wc -l). In total we have 95 samples (13 populatiosn with 5 individuals each and 2 populations with 15 individuals each).
+How many BAM files (i.e. samples) are there? (hint: ls \*bam | wc -l). In total we have 105 samples (12 populatiosn with 5 individuals each and 3 populations with 15 individuals each).
 
-Now, let's check directory permissions. Do we have permission to write to the /data/Workshop/Data/ directory? You can check this with the command "ls -l". If not, let's change permissions so that you can write to this directory.
+Now, let's check directory permissions. Do we have permission to write to the /data/Workshop/Data/ directory? You can check this with the command "ls -l" and by refering [here](https://ss64.com/bash/syntax-permissions.html). If not, let's change permissions so that you can write to this directory.
 
 	chmod 777 /data/Workshop/Data
 
