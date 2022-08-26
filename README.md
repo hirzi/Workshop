@@ -506,8 +506,8 @@ A useful statistic to calculate between pairs of populations is their population
 To calculate ***FST*** between all our population pairs, let's first make a list of all population pairs.
 
 	cd ${metadata_dir}
-	chmod u+x make_list_pairwise.sh
-	./make_list_pairwise.sh
+	chmod u+x Make_list_pairwise.sh
+	./Make_list_pairwise.sh
 
 We can then calculate the ***FST*** for each population pair by looping over each line of the pairwise list. *Note, this may take a few minutes to complete. In case it takes too long, consider increasing the number of threads via the -P argument in the angsd command (limited by number of CPU cores/threads on computer).*
 
