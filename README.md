@@ -533,9 +533,9 @@ Let's have a look at the ***FST*** results.
 
 	cd /data/Workshop/Data/1pop_sumstats
 	cat FST_summary.txt
-	Kapetanovo_Jezero.Legn_Mar_Scuol.stats.slidingwindow | less -S
-	Kapetanovo_Jezero.Val_da_la_Stura.stats.slidingwindow  | less -S
-	Kapetanovo_Jezero.Legn_Mar_Scuol.stats.slidingwindow  | less -S
+	less -S Kapetanovo_Jezero.Legn_Mar_Scuol.stats.slidingwindow
+	less -S Kapetanovo_Jezero.Val_da_la_Stura.stats.slidingwindow
+	less -S Kapetanovo_Jezero.Legn_Mar_Scuol.stats.slidingwindow
 
 Which population pairs are genetically closest to each other? Which are furthest apart? A common way to detect selection leveraging population pairs is to calculate ***FST*** in a sliding window across the genome to find loci whose ***FST*** is significantly higher (indicative of positive selection in one population but not the other) or lower (potentially indicative of balancing selection) than the genome-wide average. As in the case of single-population outlier stastistics, this typically requires generating a null distribution for ***FST*** to obtain a measure of statistical significance.
 
