@@ -161,12 +161,13 @@ Now, let's check directory permissions. Do we have permission to write to the /d
 	chmod 777 /data/Workshop/Data
 
 ## Step 7\. Index files
-We now have the data stored in a named volume. Even when we close the Docker container, the volume is maintained. We can always re-access the volume by mounting it it when running a new container. Before we perform any analysis with BAM and fasta files (or really any large sequencing file), we need to index them so that programs can parse through them efficiently. To do this, let's open another terminal tab, in which we will run Samtools. Note the named volume that we mount to.
+We now have the data stored in a named volume. Even when we close the Docker container, the volume is maintained. We can always re-access the volume by mounting it it when running a new container. Before we perform any analysis with BAM and fasta files (or really any large sequencing file), we need to index them so that programs can parse through them efficiently. To do this, let's open another terminal tab (or window), in which we will run Samtools. Note the named volume that we mount to.
 
 	docker run --name samtools --mount source=myvol,target=/data -w /data/ -it --rm biocontainers/samtools:v1.9-4-deb_cv1
 	
 Index the fasta file (i.e. the reference sequence):
 
+	cd /data/Workshop/Data/
 	samtools faidx assembly_homozygous.fa
 
 Index all the BAM files (here we'll do this in a for loop):
@@ -181,9 +182,9 @@ Principle component analysis (PCA) is a method that reduces the dimensionality o
 
 Have a look [here](https://setosa.io/ev/principal-component-analysis) to intuitively see how this is done.
 
-For NGS data, each variant site (e.g. single nucleotide polymorphism (SNP)) represents one dimesion (or axis) of variation. Thus, if we have 1 million SNPs, we have 1 million dimensions (or axes) of variation. Obviously, this would be extremely difficult to visualise without some sort of transformation applied (we can normally only visualise 2-3 axes at once). Additionally, many SNPs will be highly correlated (linked), meaning that PCA can be highly effective at reducing the dimensionality of the dataset while retaining most of the variance.
+For NGS data, each variant site (e.g. single nucleotide polymorphism (SNP)) represents one dimension (or axis) of variation. Thus, if we have 1 million SNPs, we have 1 million dimensions (or axes) of variation. Obviously, this would be extremely difficult to visualise without some sort of transformation applied (we can normally only visualise 2-3 axes at once). Additionally, many SNPs will be highly correlated (linked), meaning that PCA can be highly effective at reducing the dimensionality of the dataset while retaining most of the variance.
 
-To perform PCA, we want to find a rotation and scaling of the data to find new set of orthogonal axes that maximuse variation within the data. We can do this easily on a genotype table, e.g. in R, SNPRelate or other tools, however, recall that for low-coverage data, we potentially have a large uncertainty in genotype calls and consequently in variant calls, in addition to a large amount of missing data. The tool that we will use, PCAngsd performs PCA by first estimating individual allele frequencies (in an iterative approach), and then using the estimated individual allele frequencies as prior information for unobserved genotypes (in the data) to estimate a genetic covariance matrix [(Meisner & Albrechtsen 2018)](https://academic.oup.com/genetics/article/210/2/719/5931101).
+To perform PCA, we want to find a rotation and transformation of the data to find new set of orthogonal axes that maximise variation within the data. We can do this easily on a genotype table, e.g. in R, SNPRelate or other tools, however, recall that for low-coverage data, we potentially have a large uncertainty in genotype calls and consequently in variant calls, in addition to large amounts of missing data. The tool that we will use, PCAngsd, performs PCA by first estimating individual allele frequencies (in an iterative approach), and then using the estimated individual allele frequencies as prior information for unobserved genotypes (in the data) to estimate a genetic covariance matrix [(Meisner & Albrechtsen 2018)](https://academic.oup.com/genetics/article/210/2/719/5931101).
 
 <br>
 
@@ -204,7 +205,7 @@ Here, we first assign the reference sequence fasta file to a variable, so that i
 	REF=/data/Workshop/Data/assembly_homozygous.fa
 	metadata_dir=/data/Workshop/Metadata
 
-PCAngsd takes as input genotype likelihoods in beagle format, which we generated in the step before using the `-doGLF 2`option.
+PCAngsd takes as input genotype likelihoods in beagle format, which we will generate in ANGSD using the `-doGLF 2`option. Here, we have added some additional arguments to the ANGSD command. You can type "angsd" in the command-line or refer to [the online manual](http://www.popgen.dk/angsd/index.php/ANGSD) to learn what some of these options do.
 
 	angsd -GL 2 -out GL_75inds -ref ${REF} -nThreads 4 -doGlf 2 -doMajorMinor 1 -SNP_pval 1e-6 -doMaf 1 -only_proper_pairs 1 -minMapQ 1 -minQ 1 -C 50 -remove_bads 1 -bam ${metadata_dir}/samples_5inds.list -rf ${metadata_dir}/scaffolds.list
 
@@ -223,14 +224,14 @@ Then run the PCA
 
 ## Step 3\. Plot PCA results
 
-Let's plot the results of the PCA. Let's first copy the output (GL_75inds.pcangsd.cov) from the Docker container (volume) to your local computer (here we create a temporary container (named temp) with our named volume mounted). Let's also download the population metada and some plotting code while we are it.
+Let's plot the results of the PCA. Let's first copy the output (GL_75inds.pcangsd.cov) from the Docker container (volume) to your local computer (here we create a temporary container (named temp) with our named volume mounted). Let's also download the population metadata and some plotting code while we are it.
 
 	docker run --name temp --mount source=myvol,target=/data -w /data ubuntu
 	docker cp temp:/data/Workshop/Data/GL_75inds.pcangsd.cov ./Desktop/
 	docker cp temp:/data/Workshop/Metadata ./Desktop/
 	docker stop temp
 
-The output file together with some plotting scripts should now have been downloaded to your Desktop (if not, please check the paths in the code above).
+The output file together with some plotting scripts should now have been downloaded to your Desktop (if not, check the paths in the code above).
 
 Open Plot_PCA.R in RStudio and run the code. It will be necessary to change the path on line 10 (after "setwd") of the code to the path of your Desktop (or the path where you downloaded to). If you have time, see if you can follow some of the code.
 
