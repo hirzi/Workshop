@@ -531,6 +531,7 @@ We can then calculate the ***FST*** for each population pair by looping over eac
 
 Let's have a look at the ***FST*** results.
 
+	cd /data/Workshop/Data/1pop_sumstats
 	cat FST_summary.txt
 	Kapetanovo_Jezero.Legn_Mar_Scuol.stats.slidingwindow | less -S
 	Kapetanovo_Jezero.Val_da_la_Stura.stats.slidingwindow  | less -S
