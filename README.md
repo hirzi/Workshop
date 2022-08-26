@@ -77,7 +77,7 @@ We will be working with low-coverage whole-genome sequencing (WGS) data (average
 
 Add map!
 
-The populations and data that we will use in this workshop represents a small subset from a larger study that covered the geographic and ecological range of the species (https://www.biorxiv.org/content/10.1101/2022.06.07.495159v1). Our data is in BAM format (i.e. mapped sequencing data in binary format) and span a ~2MB region from four scaffolds selected at random across the genome. (may want to extract an interesting region for FST/PBS analysis, 15 inds pops. alternatively, consider taking data directly from Simons's data and do FST scans). We will use this data to infer this species' population structure first via principle component analysis (PCA) and then via admixture (ancestry) analysis.
+The populations and data that we will use in this workshop represents a small subset from a larger study that covered the geographic and ecological range of the species (https://www.biorxiv.org/content/10.1101/2022.06.07.495159v1). Our data is in BAM format (i.e. mapped sequencing data in binary format) and span a ~2MB region from four scaffolds selected at random across the genome. We will use this data to infer this species' population structure via principle component analysis (PCA) and then admixture (ancestry) analysis, and then calculate various diversity and neutrality statistics that can potentially inform us on past selection in these populations.
 
 <br>
 
